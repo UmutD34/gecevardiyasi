@@ -166,7 +166,7 @@ elif st.session_state.stage in events:
     # Shuffle options
     opts = [{'text':o, 'correct':(i==ev['correct'])} for i,o in enumerate(ev['ops'])]
     random.shuffle(opts)
-    st.markdown(f'<div class="question-box">{ev["icon")} {ev["q"]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="question-box">{ev["icon"]} {ev["q"]}</div>'} {ev["q"]}</div>', unsafe_allow_html=True)
     o1,o2 = st.columns(2)
     if not st.session_state.answered:
         if o1.button(opts[0]['text']):
