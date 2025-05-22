@@ -39,70 +39,7 @@ if 'scores' not in st.session_state:
     st.session_state['scores'] = []
 
 # Embed HTML5 Runner with return_value
-# Define HTML content before embedding
-global GAME_HTML
-GAME_HTML = """<!DOCTYPE html>
-<html lang=\"en\">
-<head>
-<meta charset=\"UTF-8\">
-<title>Sunflower Runner</title>
-<style>
-  body { margin:0; overflow:hidden; font-family:Arial,sans-serif; }
-  #startScreen, #gameOverScreen {
-    position:absolute; top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(255,255,255,0.9);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    z-index:2;
-  }
-  #gameOverScreen { display:none; }
-  button { font-size:1.2rem; padding:0.5rem 1rem; margin:0.5rem; border:none;
-             border-radius:8px; background:#2196F3; color:#fff; cursor:pointer; }
-  canvas { background:#fafafa; display:block; margin:auto; }
-</style>
-</head>
-<body>
-<div id=\"startScreen\">
-  <div style=\"font-size:1.8rem; font-weight:bold;margin-bottom:0.5rem; text-align:center;\">
-    🌻 Ayçiçeğim Dilay Gece Vardiyası ile Kapışıyor!
-  </div>
-  <div style=\"font-size:1.2rem; margin-bottom:1rem; text-align:center;\">
-    Engelleri Aş ve Savaşı: DİLAY RACONNN
-  </div>
-  <button id=\"startBtn\">OYUNA BAŞLA</button>
-</div>
-<canvas id=\"c\" width=\"800\" height=\"200\"></canvas>
-<div id=\"score\" style=\"text-align:center; font-size:20px; margin-top:5px;\">Skor: 0</div>
-<div id=\"gameOverScreen\">
-  <div style=\"font-size:2rem; margin-bottom:1rem;\">Oyun Bitti!</div>
-  <button id=\"restartBtn\">Yeniden Başla</button>
-</div>
-<script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-let frame=0, over=false;
-const runner={x:50,y:150,vy:0,gravity:0.6,jump:-12,symbol:'🌻',w:40,h:40};
-const icons=['📧','👻','☕️','🐭','💦','🚰'];
-let obstacles=[];
-document.getElementById('startBtn').onclick = ()=>{document.getElementById('startScreen').style.display='none'; loop();};
-document.getElementById('restartBtn').onclick = ()=>location.reload();
-document.addEventListener('keydown', e=>{ if(e.code==='Space'&&runner.y===150) runner.vy=runner.jump; });
-canvas.addEventListener('touchstart', ()=>{ if(runner.y===150) runner.vy=runner.jump; });
-canvas.addEventListener('mousedown', ()=>{ if(runner.y===150) runner.vy=runner.jump; });
-function loop(){frame++;const speed=4+Math.floor(frame/500);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#888';ctx.fillRect(0,190,canvas.width,10);runner.vy+=runner.gravity;runner.y=Math.min(150,runner.y+runner.vy);ctx.font='40px Arial';ctx.fillText(runner.symbol,runner.x,runner.y);ctx.font='12px Arial';ctx.fillText('DILAY',runner.x,runner.y-10);if(frame%(Math.max(30,80-Math.floor(frame/1000)))===0)obstacles.push({x:canvas.width,icon:icons[Math.floor(Math.random()*icons.length)]});obstacles.forEach(ob=>{ob.x-=speed;ctx.font='30px Arial';ctx.fillText(ob.icon,ob.x,180);if(ob.x<runner.x+runner.w&&ob.x+30>runner.x&&runner.y>=150)over=true;});obstacles=obstacles.filter(o=>o.x>-50);document.getElementById('score').innerText='Skor: '+Math.floor(frame/10);if(!over)requestAnimationFrame(loop);else document.getElementById('gameOverScreen').style.display='flex';}
-</script>
-</body>
-</html>
-"""
-# Now embed and capture return_value
-res = components.html
-
-(
-    GAME_HTML,
-    height=300,
-    scrolling=False,
-    return_value=True
-)
+res = components.html(GAME_HTML, height=300, scrolling=False, return_value=True)
 # If game over, JS will postMessage({player,score}) back
 if res:
     # res is a dict with keys 'player' and 'score'
