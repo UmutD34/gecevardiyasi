@@ -170,3 +170,32 @@ elif st.session_state.stage=='finished':
     st.success('🎉 Tüm bölümleri tamamladın!')
     if st.button('🔄 Yeniden Başla'):
         restart(full=True)
+
+# ----------------------
+# HTML5 Mini Oyun (Flappy Dilay)
+# ----------------------
+import streamlit.components.v1 as components
+
+GAME_HTML = """
+<!DOCTYPE html>
+<html lang=\"en\">
+<head><meta charset=\"UTF-8\"><title>Flappy Dilay</title>
+<style>body{margin:0;overflow:hidden}canvas{background:#70c5ce;display:block;margin:auto}</style>
+</head><body>
+<canvas id=\"c\" width=\"400\" height=\"600\"></canvas>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');let f=0,bx=50,by=150,bv=0,ps=[],sc=0;const g=0.4,fl=-8,pg=150;
+document.addEventListener('keydown',e=>{if(e.code==='Space')bv=fl;});
+function L(){f++;ctx.fillStyle='#70c5ce';ctx.fillRect(0,0,400,600);
+ if(f%100===0){let y=50+Math.random()*(600-pg-100);ps.push({x:400,yn:y,ys:y+pg});}
+ ps.forEach(p=>{ctx.fillStyle='#228B22';ctx.fillRect(p.x,p.yn-400,50,400);ctx.fillRect(p.x,p.ys,50,400);p.x-=2;
+ if(bx>p.x&&bx< p.x+50&&(by<p.yn||by>p.ys))return GO();if(p.x===bx)sc++;});ps=ps.filter(p=>p.x> -50);
+ bv+=g;by+=bv;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(bx,by,20,0,2*Math.PI);ctx.fill();
+ if(by>600||by<0)return GO();ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText(sc,180,50);
+ requestAnimationFrame(L);}function GO(){ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,400,600);
+ ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText('Oyun Bitti!',100,280);ctx.font='20px Arial';ctx.fillText('Yenile: F5',130,320);}L();
+</script>
+</body></html>
+"""
+
+components.html(GAME_HTML, height=650)
