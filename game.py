@@ -1,5 +1,8 @@
 import streamlit as st
 import random
+# Initialize game choice state
+if 'game_choice' not in st.session_state:
+    st.session_state.game_choice = None
 
 # ----------------------
 # Global CSS & Styling
