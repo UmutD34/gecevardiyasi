@@ -54,8 +54,12 @@ if st.session_state['game_choice'] is None:
 # Runner Game
 # ----------------------
 if st.session_state['game_choice'] == 'runner':
+    import time
+
     if 'scores' not in st.session_state:
         st.session_state.scores = []
+    if 'show_scores' not in st.session_state:
+        st.session_state.show_scores = False
 
     GAME_HTML = '''
 <!DOCTYPE html>
@@ -148,37 +152,18 @@ document.getElementById('saveScoreBtn').onclick = function() {
 </body>
 </html>
 '''
-  import time
-
-def show_score_table():
-    file_scores = load_score_file()
-    all_scores = st.session_state.scores.copy() if 'scores' in st.session_state else []
-    for fs in file_scores:
-        if fs not in all_scores:
-            all_scores.append(fs)
-    all_scores = sorted(all_scores, key=lambda x: x['skor'], reverse=True)
-    for i, e in enumerate(all_scores):
-        medal = '🏆' if i == 0 else ('🥈' if i == 1 else ('🥉' if i == 2 else ''))
-        st.write(f"{medal} {e['isim']} - {e['skor']}")
-
-if 'show_scores' not in st.session_state:
-    st.session_state.show_scores = False
-
-if st.button("🏆 Skor Tablosu"):
-    st.session_state.show_scores = not st.session_state.show_scores
-    time.sleep(0.1)
-    st.experimental_rerun()
-
-if st.session_state.show_scores:
-    show_score_table()
-
 
     res = components.html(GAME_HTML, height=350, scrolling=False)
 
-    # --- Skor Tablosu ---
+    # --- Skor Tablosu Butonu ve Gösterimi ---
     if st.button("🏆 Skor Tablosu"):
+        st.session_state.show_scores = not st.session_state.show_scores
+        time.sleep(0.1)
+        st.experimental_rerun()
+
+    if st.session_state.show_scores:
         file_scores = load_score_file()
-        all_scores = st.session_state.scores.copy()
+        all_scores = st.session_state.scores.copy() if 'scores' in st.session_state else []
         for fs in file_scores:
             if fs not in all_scores:
                 all_scores.append(fs)
