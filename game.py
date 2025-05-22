@@ -2,32 +2,6 @@ import streamlit as st
 import random
 import streamlit.components.v1 as components
 
-import json
-import os
-
-SCORE_FILE = "scores.json"
-
-def save_score_file(name, score):
-    scores = []
-    if os.path.exists(SCORE_FILE):
-        with open(SCORE_FILE, "r", encoding="utf-8") as f:
-            try:
-                scores = json.load(f)
-            except Exception:
-                scores = []
-    scores.append({"isim": name, "skor": score})
-    with open(SCORE_FILE, "w", encoding="utf-8") as f:
-        json.dump(scores, f, ensure_ascii=False)
-
-def load_score_file():
-    if os.path.exists(SCORE_FILE):
-        with open(SCORE_FILE, "r", encoding="utf-8") as f:
-            try:
-                return json.load(f)
-            except Exception:
-                return []
-    return []
-
 # ----------------------
 # Welcome Popup
 # ----------------------
@@ -54,14 +28,9 @@ if st.session_state['game_choice'] is None:
 # Runner Game
 # ----------------------
 if st.session_state['game_choice'] == 'runner':
-    import time
-
-    if 'scores' not in st.session_state:
-        st.session_state.scores = []
-    if 'show_scores' not in st.session_state:
-        st.session_state.show_scores = False
-
-    GAME_HTML = ''' ...<!DOCTYPE html>
+    import streamlit.components.v1 as components
+    GAME_HTML = """
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -94,21 +63,19 @@ if st.session_state['game_choice'] == 'runner':
 <canvas id="c" width="800" height="200"></canvas>
 <div id="gameOverScreen">
   <div style="font-size:2rem; margin-bottom:1rem;">Oyun Bitti!</div>
-  <div id="scoreMsg" style="margin-bottom:1rem; font-size:1.2rem;"></div>
-  <input id="playerName" placeholder="Adını gir" style="padding:8px; font-size:1rem; border-radius:6px; border:1px solid #aaa;">
-  <button id="saveScoreBtn">Skoru Kaydet</button>
   <button id="restartBtn">Yeniden Başla</button>
 </div>
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-let frame=0, speed=4, over=false, saved=false;
+let frame=0, speed=4, over=false;
 const runner={x:50,y:150,vy:0,gravity:0.6,jump:-12,symbol:'🌻',w:40,h:40};
 const icons=['📧','👻','☕️','🐭','💦','🚰'];
 let obstacles=[];
 
 document.getElementById('startBtn').onclick = ()=>{document.getElementById('startScreen').style.display='none'; loop();};
 document.getElementById('restartBtn').onclick = ()=>location.reload();
+canvas.addEventListener('keydown', e=>{}); // placeholder
 // Jump controls
 document.addEventListener('keydown', e=>{ if(e.code==='Space'&&runner.y===150) runner.vy=runner.jump; });
 canvas.addEventListener('touchstart', ()=>{ if(runner.y===150) runner.vy=runner.jump; });
@@ -132,66 +99,14 @@ function loop(){
   // score
   ctx.fillStyle='#000'; ctx.font='20px Arial'; ctx.fillText('Skor: '+Math.floor(frame/10),canvas.width/2-40,30);
   // loop or over
-  if(!over) requestAnimationFrame(loop); 
-  else {
-    document.getElementById('gameOverScreen').style.display='flex';
-    document.getElementById('scoreMsg').innerText='Skorun: '+Math.floor(frame/10);
-  }
+  if(!over) requestAnimationFrame(loop); else document.getElementById('gameOverScreen').style.display='flex';
 }
-
-document.getElementById('saveScoreBtn').onclick = function() {
-  if(saved) return;
-  var isim = document.getElementById('playerName').value || "İsimsiz";
-  var skor = document.getElementById('scoreMsg').innerText.replace(/\\D/g,'');
-  window.parent.postMessage({player: isim, score: Number(skor)}, "*");
-  saved=true;
-  document.getElementById('saveScoreBtn').innerText='Kaydedildi!';
-};
 </script>
 </body>
 </html>
-''' ... '''
-    res = components.html(GAME_HTML, height=350, scrolling=False)
-
-    # --- Skor Tablosu Butonu ve Gösterimi ---
-    if st.button("🏆 Skor Tablosu"):
-        st.session_state.show_scores = not st.session_state.show_scores
-
-    if st.session_state.show_scores:
-        file_scores = load_score_file()
-        all_scores = st.session_state.scores.copy() if 'scores' in st.session_state else []
-        for fs in file_scores:
-            if fs not in all_scores:
-                all_scores.append(fs)
-        all_scores = sorted(all_scores, key=lambda x: x['skor'], reverse=True)
-        for i, e in enumerate(all_scores):
-            medal = '🏆' if i == 0 else ('🥈' if i == 1 else ('🥉' if i == 2 else ''))
-            st.write(f"{medal} {e['isim']} - {e['skor']}")
-
+"""
+    components.html(GAME_HTML, height=240)
     st.stop()
-
-
-
-    res = components.html(GAME_HTML, height=350, scrolling=False)
-
-  # --- Skor Tablosu Butonu ve Gösterimi ---
-if st.button("🏆 Skor Tablosu"):
-    st.session_state.show_scores = not st.session_state.show_scores
-
-if st.session_state.show_scores:
-    file_scores = load_score_file()
-    all_scores = st.session_state.scores.copy() if 'scores' in st.session_state else []
-    for fs in file_scores:
-        if fs not in all_scores:
-            all_scores.append(fs)
-    all_scores = sorted(all_scores, key=lambda x: x['skor'], reverse=True)
-    for i, e in enumerate(all_scores):
-        medal = '🏆' if i == 0 else ('🥈' if i == 1 else ('🥉' if i == 2 else ''))
-        st.write(f"{medal} {e['isim']} - {e['skor']}")
-
-
-    st.stop()
-
 
 # ----------------------
 # Text Adventure Setup
