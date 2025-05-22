@@ -64,7 +64,7 @@ const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 let frame = 0, speed = 4, over = false;
 const runner = { x:50, y:150, vy:0, gravity:0.6, jump:-12, symbol:'🌻', w:40, h:40 };
-const icons = ['✉️','👻','☕️','🐭','💧','🚰','🔔','🎁','🪤','🎉'];
+const icons = ['📧','👻','☕️','🐭','💦','🚰'];  // olay temalı ikonlar
 let obstacles = [];
 document.getElementById('startBtn').onclick = () => { document.getElementById('startScreen').style.display = 'none'; loop(); };
 document.getElementById('restartBtn').onclick = () => location.reload();
