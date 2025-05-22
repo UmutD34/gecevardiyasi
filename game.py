@@ -13,9 +13,9 @@ if 'game_choice' not in st.session_state:
 if st.session_state['game_choice'] is None:
     st.title("🌻 Hangi oyunu oynamak istersin?")
     col1, col2 = st.columns(2)
-    if col1.button("📝 Metin Macerası"):
+    if col1.button("📝 GECE VARDİYASI KAPIŞMASI):
         st.session_state['game_choice'] = 'text'
-    if col2.button("🏃‍♂️ Koşu Oyunu"):
+    if col2.button("🏃‍♂️ GECE VARDİYASI MARATON KOŞUSU"):
         st.session_state['game_choice'] = 'runner'
     st.stop()
 
@@ -51,7 +51,8 @@ if st.session_state['game_choice'] == 'runner':
 </head>
 <body>
 <div id="startScreen">
-  <div style="font-size:2rem; margin-bottom:1rem;">🌻 GECE VARDİYASI KOŞUCUSU</div>
+  <div style="font-size:1.8rem; margin-bottom:1rem; text-align:center; font-weight:bold;">🌻 Ayçiçeğim Dilay Gece Vardiyası ile Kapışıyor!</div>
+  <div style="font-size:1.2rem; margin-bottom:1rem; text-align:center;">Engelleri Aş ve Savaşı: DİLAY RACONNN</div>
   <button id="startBtn">OYUNA BAŞLA</button>
 </div>
 <canvas id="c" width="800" height="200"></canvas>
