@@ -95,12 +95,7 @@ function loop(){frame++;const speed=4+Math.floor(frame/500);ctx.clearRect(0,0,ca
 </html>
 """
 # Now embed and capture return_value
-res = components.html(
-    GAME_HTML,
-    height=300,
-    scrolling=False,
-    return_value=True
-)
+res = components.html
 
 (
     GAME_HTML,
