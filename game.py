@@ -15,47 +15,68 @@ if st.session_state.game_choice is None:
     st.stop()
 
 # ========= RUNNER =========
-if st.session_state.game_choice=='runner':
-    st.session_state.setdefault('scores',[])
-    GAME_HTML=f"""
-<!DOCTYPE html><html><head><meta charset='utf-8'><style>
-body{{margin:0;overflow:hidden;font-family:Arial}}
-canvas{{background:#fafafa;display:block;margin:auto}}
-#score{{text-align:center;font-size:20px;margin-top:5px}}
-#screen{{position:absolute;top:0;left:0;width:100%;height:100%;
-background:rgba(255,255,255,.9);display:flex;flex-direction:column;
-align-items:center;justify-content:center;z-index:2}}
-button{{font-size:1.2rem;padding:.5rem 1rem;border:none;border-radius:8px;background:#2196F3;color:#fff}}
-</style></head><body>
-<div id=screen><h2>🌻 Ayçiçeğim Dilay Gece Vardiyası ile Kapışıyor!</h2>
-<p>Engelleri aş ve savaşı: <b>DİLAY RACONNN</b></p><button onclick='start()'>OYUNA BAŞLA</button></div>
-<canvas id=c width=800 height=200></canvas><div id=score>Skor: 0</div>
-<script>
-const c=document.getElementById('c'),x=c.getContext('2d');
-let f=0,over=false;const r={{x:50,y:150,vy:0,g:0.6,j:-12,s:'🌻'}};
-const icons=['✉️','👻','☕️','🐭','💦','🚰'];let obs=[];
-function start(){{document.getElementById('screen').style.display='none';loop();}}
-document.addEventListener('keydown',e=>{{if(e.code==='Space'&&r.y===150)r.vy=r.j;}});
-c.addEventListener('touchstart',()=>{{if(r.y===150)r.vy=r.j;}});c.addEventListener('mousedown',()=>{{if(r.y===150)r.vy=r.j;}});
-function loop(){{f++;const speed=4+Math.floor(f/500);x.clearRect(0,0,800,200);x.fillStyle='#888';x.fillRect(0,190,800,10);
-r.vy+=r.g;r.y=Math.min(150,r.y+r.vy);x.font='40px Arial';x.fillText(r.s,r.x,r.y);
-if(f%(Math.max(30,80-Math.floor(f/1000)))===0)obs.push({{x:800,ic:icons[Math.random()*icons.length|0]}});obs.forEach(o=>{{o.x-=speed;x.font='30px Arial';x.fillText(o.ic,o.x,180);if(o.x<r.x+40&&o.x+30>r.x&&r.y>=150)over=true;}});obs=obs.filter(o=>o.x>-50);
-document.getElementById('score').innerText='Skor: '+Math.floor(f/10);
-if(!over)requestAnimationFrame(loop);else{{const s=Math.floor(f/10);window.parent.postMessage({score:s}, '*');({{player:p||'Anonim',score:s}},'*');}}
-}}
-</script></body></html>"""
-    res=components.html(GAME_HTML,height=300,scrolling=False,return_value=True)
-    if isinstance(res,dict) and 'score'in res:
-        st.session_state.scores.append({'isim':res['player'],'skor':res['score']})
+if st.session_state.game_choice == 'runner':
+    st.session_state.setdefault("scores", [])
+
+    # --- HTML5 Runner ---
+    GAME_HTML = """
+    <!DOCTYPE html><html><head><meta charset='utf-8'>
+    <style>
+      body{margin:0;overflow:hidden;font-family:Arial}
+      canvas{background:#fafafa;display:block;margin:auto}
+      #score{position:absolute;top:10px;width:100%;text-align:center;font-size:20px}
+      #screen,#gameOver{position:absolute;top:0;left:0;width:100%;height:100%;
+        background:rgba(255,255,255,.9);display:flex;flex-direction:column;
+        align-items:center;justify-content:center;z-index:2}
+      #gameOver{display:none}
+      button{font-size:1.2rem;padding:.5rem 1rem;border:none;border-radius:8px;background:#2196F3;color:#fff}
+    </style></head><body>
+    <div id=screen><h2>🌻 Ayçiçeğim Dilay Gece Vardiyası ile Kapışıyor!</h2>
+      <p>Engelleri Aş ve Savaşı: <b>DİLAY RACONNN</b></p>
+      <button onclick="start()">OYUNA BAŞLA</button></div>
+    <canvas id=c width=800 height=200></canvas><div id=score>Skor: 0</div>
+    <div id=gameOver><h2>Oyun Bitti!</h2></div>
+    <script>
+    const c=document.getElementById('c'),ctx=c.getContext('2d');
+    let f=0,over=false;
+    const r={x:50,y:150,vy:0,g:0.6,j:-12,s:'🌻',w:40};
+    const icons=['✉️','👻','☕️','🐭','💦','🚰'];let obs=[];
+    function start(){document.getElementById('screen').style.display='none';loop();}
+    document.addEventListener('keydown',e=>{if(e.code==='Space'&&r.y===150)r.vy=r.j;});
+    c.addEventListener('mousedown',()=>{if(r.y===150)r.vy=r.j;});
+    c.addEventListener('touchstart',()=>{if(r.y===150)r.vy=r.j;});
+    function loop(){
+      f++;const speed=4+Math.floor(f/500);
+      ctx.clearRect(0,0,800,200);ctx.fillStyle='#888';ctx.fillRect(0,190,800,10);
+      r.vy+=r.g;r.y=Math.min(150,r.y+r.vy);
+      ctx.font='40px Arial';ctx.fillText(r.s,r.x,r.y);
+      if(f%(Math.max(30,80-Math.floor(f/1000)))===0)
+          obs.push({x:800,ic:icons[Math.random()*icons.length|0]});
+      obs.forEach(o=>{o.x-=speed;ctx.font='30px Arial';ctx.fillText(o.ic,o.x,180);
+        if(o.x<r.x+40&&o.x+30>r.x&&r.y>=150)over=true;});
+      obs=obs.filter(o=>o.x>-50);
+      document.getElementById('score').innerText='Skor: '+Math.floor(f/10);
+      if(!over)requestAnimationFrame(loop);
+      else{
+        const s=Math.floor(f/10);
+        const p=prompt('Oyun bitti! Skorunuz: '+s+'\\nİsminiz?');
+        window.parent.postMessage({player:p||'Anonim',score:s},'*');
+        document.getElementById('gameOver').style.display='flex';
+      }}
+    </script></body></html>"""
+    res = components.html(GAME_HTML, height=300, scrolling=False, return_value=True)
+
+    # --- Skor kaydet ---
+    if isinstance(res, dict) and 'score' in res:
+        st.session_state.scores.append({'isim': res['player'], 'skor': res['score']})
         st.success(f"🏅 {res['player']} skoru {res['score']} kaydedildi!")
 
-    if st.button('🏆 Skor Tablosu'):
-            if st.button('🏆 Skor Tablosu'):
-        scores_sorted = sorted(st.session_state.scores, key=lambda x: x['skor'], reverse=True)
-        for i, e in enumerate(scores_sorted):
-            medal = '🏆' if i == 0 else ('🥈' if i == 1 else ('🥉' if i == 2 else ''))
-            st.write(f"{medal} {e['isim']} - {e['skor']}")
-    st.stop()()
+    # --- Skor Tablosu ---
+    if st.button("🏆 Skor Tablosu"):
+        for i, e in enumerate(sorted(st.session_state.scores, key=lambda x:x['skor'], reverse=True)):
+            medal = '🏆' if i==0 else '🥈' if i==1 else '🥉' if i==2 else ''
+            st.write(f\"{medal} {e['isim']} - {e['skor']}\")
+    st.stop()
 
 # ========= TEXT ADVENTURE =========
 # --- State
