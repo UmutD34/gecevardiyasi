@@ -18,19 +18,7 @@ st.markdown(
     </style>
     """, unsafe_allow_html=True)
 
-# ----------------------
-# Initialize State
-# ----------------------
-if 'stage' not in st.session_state:
-    st.session_state.update({
-        'stage':'intro',
-        'step':0,
-        'lives':3,
-        'answered':False,
-        'score':0
-    })
-
-# DEBUG: uncomment to view state
+: uncomment to view state
 # st.write(st.session_state)
 
 # ----------------------
