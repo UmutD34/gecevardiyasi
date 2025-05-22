@@ -7,9 +7,10 @@ st.markdown(
     """
     <style>
     .game-title { font-size:48px; font-weight:bold; text-align:center; margin-top:20px; }
-    .lives-board { font-size:20px; text-align:center; margin-bottom:10px; }
+    .lives-board { font-size:20px; text-align:center; margin-bottom:20px; }
     .question-box { background:#f0f0f5; padding:20px; border-radius:10px; margin:20px auto; max-width:800px; }
     .btn-option { width:45%; padding:15px; font-size:18px; margin:10px; border-radius:8px; }
+    .btn-next { background-color:#2196F3; color:white; width:200px; padding:12px; margin:20px auto; display:block; border:none; border-radius:8px; font-size:18px; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -21,9 +22,10 @@ if 'stage' not in st.session_state:
     st.session_state.step = 0
     st.session_state.lives = 3
     st.session_state.answered = False
+    st.session_state.score = 0
 
 # ----------------------
-# Event Data (İçerik asla değiştirilmeyecek)
+# Event Data (İçerik değişmeyecek)
 # ----------------------
 events = {
     'gece_mail': [
@@ -51,7 +53,7 @@ events = {
           'ops': ["✏️ Velilere Papua Yeni Gine bileti al", "🌸 Papatya çayı öner"], 'correct':0, 'pts':15},
     ],
     'fare': [
-        { 'q': "🐭 Fareler istilaya geçti! Ne yaparsın?",
+        { 'q': "🐭 Fareler istilaya geçti! Ne yapacaksın?",
           'ops': ["🥫 Miyu çagır", "🔊 Kaval çal"], 'correct':0, 'pts':10},
         { 'q': "💻 Fareler bilgisayara saldırıyor!",
           'ops': ["🪤 Keyifle izle", "🔊 Onları kov"], 'correct':0, 'pts':12},
@@ -84,6 +86,7 @@ def restart(full=False):
     st.session_state.stage = 'intro'
     st.session_state.step = 0
     st.session_state.answered = False
+    st.session_state.score = 0
     if full:
         st.session_state.lives = 3
 
@@ -97,64 +100,77 @@ def advance():
         st.session_state.step = 0
 
 # ----------------------
-# Layout
+# Başlık ve Can Barı
 # ----------------------
-# Hearts for lives
+st.markdown('<div class="game-title">🌻 GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
 hearts = '❤️' * max(0, st.session_state.lives)
 st.markdown(f'<div class="lives-board">Can: {hearts}</div>', unsafe_allow_html=True)
 
-st.markdown('<div class="game-title">🌻 GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
-
-# Intro
-if st.session_state.stage=='intro':
+# ----------------------
+# Intro Bölümü
+# ----------------------
+if st.session_state.stage == 'intro':
     st.markdown('<div class="question-box">Gece vardiyasına hoş geldin! 🤔</div>', unsafe_allow_html=True)
-    c1,c2 = st.columns(2)
+    c1, c2 = st.columns(2)
     if c1.button('💪 Evet, hazırım', key='intro_yes'):
-        st.session_state.stage='gece_mail'; st.experimental_rerun()
+        st.session_state.stage = 'gece_mail'
     if c2.button('😱 Hayır, korkuyorum', key='intro_no'):
         st.session_state.lives = max(0, st.session_state.lives - 1)
         if st.session_state.lives > 0:
-            st.warning(f'Korkuya yenik düştün! Canın azaldı: {hearts}')
-            st.experimental_rerun()
+            st.error(f'Korkuya yenik düştün! Canın azaldı.')
+            restart()
         else:
             st.error('❌ Oyun bitti! Can hakkın tükendi.')
             if st.button('🔄 Yeniden Başla'):
-                restart(full=True); st.experimental_rerun()
+                restart(full=True)
 
+# ----------------------
 # Oyun Bölümleri
+# ----------------------
 elif st.session_state.stage in events:
     ev = events[st.session_state.stage][st.session_state.step]
     st.markdown(f'<div class="question-box">{ev["q"]}</div>', unsafe_allow_html=True)
-    o1,o2 = st.columns(2)
+    o1, o2 = st.columns(2)
     if not st.session_state.answered:
         if o1.button(ev['ops'][0], key=f'opt1_{st.session_state.stage}_{st.session_state.step}'):
             st.session_state.answered = True
             if 0 == ev['correct']:
-                st.success('✅ Doğru seçim!'); advance(); st.experimental_rerun()
+                st.success('✅ Doğru seçim!')
+                advance()
             else:
                 st.session_state.lives = max(0, st.session_state.lives - 1)
                 if st.session_state.lives > 0:
-                    st.error(f'❌ Yanlış seçim! Canın azaldı: {hearts}'); restart(); st.experimental_rerun()
+                    st.error('❌ Yanlış seçim!')
                 else:
                     st.error('❌ Oyun bitti! Can hakkın tükendi.')
-                    if st.button('🔄 Yeniden Başla'):
-                        restart(full=True); st.experimental_rerun()
+            
         if o2.button(ev['ops'][1], key=f'opt2_{st.session_state.stage}_{st.session_state.step}'):
             st.session_state.answered = True
             if 1 == ev['correct']:
-                st.success('✅ Doğru seçim!'); advance(); st.experimental_rerun()
+                st.success('✅ Doğru seçim!')
+                advance()
             else:
                 st.session_state.lives = max(0, st.session_state.lives - 1)
                 if st.session_state.lives > 0:
-                    st.error(f'❌ Yanlış seçim! Canın azaldı: {hearts}'); restart(); st.experimental_rerun()
+                    st.error('❌ Yanlış seçim!')
                 else:
                     st.error('❌ Oyun bitti! Can hakkın tükendi.')
-                    if st.button('🔄 Yeniden Başla'):
-                        restart(full=True); st.experimental_rerun()
+    else:
+        # Eğer answered True ise Next butonu
+        if st.button('▶️ İleri', key=f'next_{st.session_state.stage}_{st.session_state.step}'):
+            restart_section = False
+            if st.session_state.lives == 0:
+                restart_section = True
+            if restart_section:
+                restart(full=True)
+            else:
+                advance()
 
-# Bitti
-elif st.session_state.stage=='finished':
+# ----------------------
+# Oyun Bitiş
+# ----------------------
+elif st.session_state.stage == 'finished':
     st.balloons()
     st.success('🎉 Tüm bölümleri başarıyla tamamladın!')
     if st.button('🔄 Yeniden Başla'):
-        restart(full=True); st.experimental_rerun()
+        restart(full=True)
