@@ -6,7 +6,7 @@ import streamlit.components.v1 as components
 # Welcome Popup
 # ----------------------
 if 'welcome_shown' not in st.session_state:
-    components.html("<script>alert('🌻 Hoşgeldiniz! Gece Vardiyasına Hazır Mısın, Dilay?');</script>", height=0)
+    components.html("<script>alert('🌻 Sultanlar sultanı Dilay Sultan için gece vardiyasi oyunları serisi');</script>", height=0)
     st.session_state['welcome_shown'] = True
 
 # ----------------------
