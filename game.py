@@ -27,17 +27,41 @@ if st.session_state['game_choice'] is None:
 # ----------------------
 # Runner Game
 # ----------------------
-if 'player_name' not in st.session_state or st.session_state.get('player_name') is None:
-    name = st.text_input('🏷️ Lütfen isminizi girin:', key='name_input')
-    if st.button('Oyuna Başla'):  # start when name entered
-        if name:
-            st.session_state['player_name'] = name
-            # initialize scores list
-            if 'scores' not in st.session_state:
-                st.session_state['scores'] = []
-        else:
-            st.warning('Lütfen geçerli bir isim girin.')
-    st.stop()
+# Player name input
+if 'player_name' not in st.session_state:
+    name = st.text_input('🏷️ İsminizi girin:')
+    if not name:
+        st.warning('Lütfen geçerli bir isim girin!')
+        st.stop()
+    st.session_state['player_name'] = name
+# Initialize score list
+if 'scores' not in st.session_state:
+    st.session_state['scores'] = []
+
+# Embed HTML5 Runner with return_value
+res = components.html(
+    GAME_HTML,
+    height=300,
+    scrolling=False,
+    return_value=True
+)
+# If game over, JS will postMessage({player,score}) back
+if res:
+    # res is a dict with keys 'player' and 'score'
+    st.session_state['scores'].append({
+        'isim': res.get('player', st.session_state['player_name']),
+        'skor': res.get('score', 0)
+    })
+    st.success(f"🏅 {res.get('player')} skoru {res.get('score')} kaydedildi!")
+
+# Show scoreboard
+if st.button('🏆 Skor Tablosu'):
+    scores = sorted(st.session_state['scores'], key=lambda x: x['skor'], reverse=True)
+    for i, entry in enumerate(scores):
+        medal = '🏆' if i==0 else ('🥈' if i==1 else ('🥉' if i==2 else ''))
+        st.write(f"{medal} {entry['isim']} - {entry['skor']}")
+
+st.stop()
 
 # Embed HTML5 Runner
 import streamlit.components.v1 as components
