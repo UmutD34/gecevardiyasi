@@ -204,7 +204,7 @@ elif st.session_state.stage=='finished':
         restart(full=True)
 
 # ----------------------
-# HTML5 Infinite Runner (Sunflower Runner)
+# HTML5 Infinite Runner (Sunflower Runner) with Start/Game Over Screens
 # ----------------------
 import streamlit.components.v1 as components
 
@@ -215,90 +215,107 @@ GAME_HTML = """<!DOCTYPE html>
 <meta charset=\"UTF-8\">
 <title>Sunflower Runner</title>
 <style>
-  body { margin:0; overflow:hidden; }
-  canvas { background:#fafafa; display:block; margin:auto; }
+  body { margin:0; overflow:hidden; font-family:Arial,sans-serif; }
+  #startScreen, #gameOverScreen {
+    position:absolute; top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(255,255,255,0.9);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    z-index:2;
+  }
+  #gameOverScreen { display:none; }
+  button {
+    font-size:1.2rem; padding:0.5rem 1rem;
+    margin:0.5rem; border:none;
+    border-radius:8px; background:#2196F3; color:#fff;
+    cursor:pointer;
+  }
+  canvas { background:#fafafa; display:block; margin:auto; z-index:1; }
 </style>
 </head>
 <body>
+
+<div id=\"startScreen\">
+  <div style=\"font-size:2rem; margin-bottom:1rem;\">🌻 GECE VARDİYASI KOŞUCUSU</div>
+  <button id=\"startBtn\">OYUNA BAŞLA</button>
+</div>
+
 <canvas id=\"c\" width=\"800\" height=\"200\"></canvas>
+
+<div id=\"gameOverScreen\">
+  <div style=\"font-size:2rem; margin-bottom:1rem;\">Oyun Bitti!</div>
+  <button id=\"restartBtn\">Yeniden Başla</button>
+</div>
+
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-let frame = 0;
-let speed = 6;
-let gameOver = false;
+let frame = 0, speed = 6, over = false;
 
-// Runner as sunflower image
-const sun = new Image();
-sun.src = 'https://i.imgur.com/QPdE3G3.png';
-const runner = { x: 50, y: 150, vy: 0, gravity: 0.6, jump: -12, w: 40, h: 40 };
+// Runner as sunflower
+const runner = { x:50, y:150, vy:0, gravity:0.6, jump:-12, symbol:'🌻', w:40, h:40 };
 
-// Esprili metinler
+// Espirili metinler
 const jokes = [
   "Spam mail geldi!",
   "Hayalet öğrenci... Boo!",
   "Sinirli veli kapıda!",
   "Fare partisi var!",
   "Su sel oldu!",
-  "Lavabo temizlik zamanı!"
+  "Lavabo temizliği zamanı!"
 ];
-
 let obstacles = [];
 
-// Zıplama kontrolü
-document.addEventListener('keydown', e => { if(e.code==='Space' && runner.y===150) runner.vy = runner.jump; });
+// Start & Restart Buttons
+document.getElementById('startBtn').onclick = () => {
+  document.getElementById('startScreen').style.display = 'none';
+  loop();
+};
+document.getElementById('restartBtn').onclick = () => location.reload();
+
+// Jump Control
+document.addEventListener('keydown', e => {
+  if(e.code==='Space' && runner.y===150) runner.vy = runner.jump;
+});
 
 function loop() {
   frame++;
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Zemin
-  ctx.fillStyle = '#888'; ctx.fillRect(0,190,canvas.width,10);
+  // Ground
+  ctx.fillStyle = '#888';
+  ctx.fillRect(0,190,canvas.width,10);
 
-  // Runner fizik ve çizim (ayçiçeği zıplıyor)
+  // Runner physics and draw
   runner.vy += runner.gravity;
   runner.y = Math.min(150, runner.y + runner.vy);
-  ctx.drawImage(sun, runner.x, runner.y-10, runner.w, runner.h);
+  ctx.font = '40px Arial';
+  ctx.fillText(runner.symbol, runner.x, runner.y);
 
-  // Engel oluşturma
+  // Spawn obstacles
   if(frame % 80 === 0) {
-    let text = jokes[Math.floor(Math.random()*jokes.length)];
-    obstacles.push({ x: canvas.width, start: frame, text });
+    let txt = jokes[Math.floor(Math.random()*jokes.length)];
+    obstacles.push({ x:canvas.width, start:frame, text:txt });
   }
 
-  // Engelleri çiz ve çarpışma
+  // Draw obstacles and check collision
   obstacles.forEach(ob => {
     ob.x -= speed;
-    // Typewriter efekti
     let len = Math.min(ob.text.length, Math.floor((frame - ob.start)/10));
-    let display = ob.text.substring(0, len);
-    ctx.fillStyle = '#000';
     ctx.font = '20px Arial';
-    ctx.fillText(display, ob.x, 180);
-    // Çarpışma kontrolü
-    if(ob.x < runner.x + runner.w && ob.x + 100 > runner.x && runner.y + runner.h >= 190) {
-      gameOver = true;
-    }
+    ctx.fillStyle = '#000';
+    ctx.fillText(ob.text.substring(0,len), ob.x, 180);
+    if(ob.x < runner.x + runner.w && ob.x + 200 > runner.x && runner.y >= 150) over = true;
   });
   obstacles = obstacles.filter(o => o.x > -200);
 
-  // Skor
-  let score = Math.floor(frame/10);
-  ctx.fillStyle = '#000';
-  ctx.font = '20px Arial';
-  ctx.fillText('Skor: ' + score, 650, 30);
+  // Score
+  ctx.fillStyle = '#000'; ctx.font = '20px Arial';
+  ctx.fillText('Skor: ' + Math.floor(frame/10), 650, 30);
 
-  if(!gameOver) requestAnimationFrame(loop);
-  else {
-    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#fff';
-    ctx.font = '30px Arial';
-    ctx.fillText('Oyun Bitti! F5 ile yeniden', 260, 100);
-  }
+  if(!over) requestAnimationFrame(loop);
+  else document.getElementById('gameOverScreen').style.display = 'flex';
 }
-// Başlat
-sun.onload = () => loop();
 </script>
 </body>
 </html>"""
