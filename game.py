@@ -101,6 +101,7 @@ res = components.html(
     scrolling=False,
     return_value=True
 )
+
 (
     GAME_HTML,
     height=300,
