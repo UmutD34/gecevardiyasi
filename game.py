@@ -7,9 +7,7 @@ st.markdown(
     """
     <style>
     .game-title { font-size:48px; font-weight:bold; text-align:center; margin-top:20px; }
-    .score-board { font-size:20px; text-align:center; margin-bottom:10px; }
-    .bars { display:flex; justify-content:space-around; margin:10px 0; }
-    .bar { width:45%; }
+    .lives-board { font-size:20px; text-align:center; margin-bottom:10px; }
     .question-box { background:#f0f0f5; padding:20px; border-radius:10px; margin:20px auto; max-width:800px; }
     .btn-option { width:45%; padding:15px; font-size:18px; margin:10px; border-radius:8px; }
     .btn-next { background-color:#2196F3; color:white; width:200px; padding:12px; margin:20px auto; display:block; border:none; border-radius:8px; font-size:18px; }
@@ -22,13 +20,11 @@ st.markdown(
 if 'stage' not in st.session_state:
     st.session_state.stage = 'intro'
     st.session_state.step = 0
-    st.session_state.health = 100
-    st.session_state.enemy = 100
-    st.session_state.score = 0
+    st.session_state.lives = 3
     st.session_state.answered = False
 
 # ----------------------
-# Event Data
+# Event Data (İçerik asla değiştirilmeyecek)
 # ----------------------
 events = {
     'gece_mail': [
@@ -80,13 +76,18 @@ events = {
           'ops': ["🔧 Boru bağla", "💃 Dans et"], 'correct':0, 'pts':15},
     ],
 }
-order = ['intro','gece_mail','ogrenciler','veliler','fare','su','asansor','lavabo','finished']
+order = ['intro','gece_mail','ogrenciler','veliler','fare','su','lavabo','finished']
 
 # ----------------------
 # Fonksiyonlar
 # ----------------------
-def restart():
-    st.session_state.update({'stage':'intro','step':0,'health':100,'enemy':100,'score':0,'answered':False})
+def restart(full=False):
+    st.session_state.stage = 'intro'
+    st.session_state.step = 0
+    st.session_state.answered = False
+    if full:
+        st.session_state.lives = 3
+
 
 def advance():
     st.session_state.step += 1
@@ -99,8 +100,8 @@ def advance():
 # ----------------------
 # Layout
 # ----------------------
-st.markdown('<div class="game-title">🌻GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="score-board">Skor: {st.session_state.score}</div>', unsafe_allow_html=True)
+st.markdown('<div class="game-title">🌻 GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="lives-board">Kalan Can: {st.session_state.lives}</div>', unsafe_allow_html=True)
 
 # Intro
 if st.session_state.stage=='intro':
@@ -110,9 +111,16 @@ if st.session_state.stage=='intro':
         st.session_state.stage='gece_mail'
         st.session_state.step = 0
     if c2.button('😱 Hayır, korkuyorum', key='intro_no'):
-        st.error('Korkuya yenik düştün!')
-        if st.button('🔄 Tekrar Dene'):
+        st.session_state.lives -= 1
+        if st.session_state.lives > 0:
+            st.error(f'Korkuya yenik düştün! Kalan can: {st.session_state.lives}')
             restart()
+            st.stop()
+        else:
+            st.error('❌ Oyun bitti! Can hakkın tükendi.')
+            if st.button('🔄 Yeniden Başla'):
+                restart(full=True)
+            st.stop()
 
 # Oyun Bölümleri
 elif st.session_state.stage in events:
@@ -122,25 +130,40 @@ elif st.session_state.stage in events:
     if not st.session_state.answered:
         if o1.button(ev['ops'][0], key=f'opt1_{st.session_state.stage}_{st.session_state.step}'):
             st.session_state.answered = True
-            if 0==ev['correct']:
+            if 0 == ev['correct']:
                 st.success('✅ Doğru seçim!')
-                st.session_state.score += ev['pts']
+                advance()
             else:
-                st.error('❌ Yanlış seçim!')
+                st.session_state.lives -= 1
+                if st.session_state.lives > 0:
+                    st.error(f'❌ Yanlış seçim! Kalan can: {st.session_state.lives}')
+                    restart()
+                    st.stop()
+                else:
+                    st.error('❌ Oyun bitti! Can hakkın tükendi.')
+                    if st.button('🔄 Yeniden Başla'):
+                        restart(full=True)
+                    st.stop()
         if o2.button(ev['ops'][1], key=f'opt2_{st.session_state.stage}_{st.session_state.step}'):
             st.session_state.answered = True
-            if 1==ev['correct']:
+            if 1 == ev['correct']:
                 st.success('✅ Doğru seçim!')
-                st.session_state.score += ev['pts']
+                advance()
             else:
-                st.error('❌ Yanlış seçim!')
-    else:
-        if st.button('▶️ İleri', key=f'next_{st.session_state.stage}_{st.session_state.step}'):
-            advance()
+                st.session_state.lives -= 1
+                if st.session_state.lives > 0:
+                    st.error(f'❌ Yanlış seçim! Kalan can: {st.session_state.lives}')
+                    restart()
+                    st.stop()
+                else:
+                    st.error('❌ Oyun bitti! Can hakkın tükendi.')
+                    if st.button('🔄 Yeniden Başla'):
+                        restart(full=True)
+                    st.stop()
 
 # Bitti
 elif st.session_state.stage=='finished':
     st.balloons()
-    st.success(f'Tebrikler! Tüm bölümleri tamamladın. Skor: {st.session_state.score} 🌟')
+    st.success('🎉 Tüm bölümleri başarıyla tamamladın!')
     if st.button('🔄 Yeniden Başla'):
-        restart()
+        restart(full=True)
