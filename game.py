@@ -251,7 +251,7 @@ components.html("""
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-let frame = 0, speed = 4, over = false;  // hız yavaşlatıldı
+let frame = 0, speed = 4, over = false;
 
 // Runner as sunflower
 const runner = { x:50, y:150, vy:0, gravity:0.6, jump:-12, symbol:'🌻', w:40, h:40 };
@@ -314,4 +314,4 @@ function loop() {
 </script>
 </body>
 </html>
-""", height=240)(GAME_HTML, height=240)
+""", height=240)
