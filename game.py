@@ -1,4 +1,5 @@
 import streamlit as st
+import random
 
 # ----------------------
 # Global CSS & Styling
@@ -26,20 +27,18 @@ if 'stage' not in st.session_state:
     })
 
 # ----------------------
-# Debug View
-# ----------------------
-# Uncomment to see state for debugging
-# st.write(st.session_state)
-
-# ----------------------
-# Event Data (Fixed Content)
+# Event Data
 # ----------------------
 events = {
     'gece_mail': [
         { 'q': "📧 Gece vardiyası baslarken gıcık bir mail ile karşılaştın, ne yapacaksın?",
           'ops': ["🛡️ Dilay racon ile mail yazarım", "📖 Görmezden gelirim"], 'correct':0, 'pts':10, 'icon':'✉️'},
+        { 'q': "🗑️ Mail spam klasörüne düştü, tekrar geri getirmek ister misin?",
+          'ops': ["🔄 Geri alırım", "🚮 Kalmasın"], 'correct':1, 'pts':12, 'icon':'🗳️'},
         { 'q': "🔄 Yazım yanlışı uyarısı, ne yapacaksın?",
-          'ops': ["🔇 Bilgisayarı camdan at", "🏫 Masanın altına gir"], 'correct':0, 'pts':15, 'icon':'✍️'},
+          'ops': ["✍️ Hemen düzenlerim", "🙉 Görmemezlikten gelirim"], 'correct':0, 'pts':15, 'icon':'✍️'},
+        { 'q': "📅 Maili yanlışlıkla 2050'ye erteledin, ne hissediyorsun?",
+          'ops': ["😅 Geri alırım", "🚀 Geleceğe yolculuk"], 'correct':0, 'pts':18, 'icon':'🕒'},
         { 'q': "🚀 Kameralar bozuldu, ne yapacaksın?",
           'ops': ["🙏 Dua et", "🗑️ Çöpe at"], 'correct':0, 'pts':20, 'icon':'📷'},
     ],
@@ -47,25 +46,37 @@ events = {
         { 'q': "💳 Kartını unutan öğrenci, ne yapacaksın?",
           'ops': ["🔔 Raconla aç", "🎧 Dinlemem"], 'correct':0, 'pts':8, 'icon':'👩‍🎓'},
         { 'q': "👻 Hayalet gördüğünü iddia etti, ne yapacaksın?",
-          'ops': ["🦹‍♂️ Maske tak","🎤 Şarkı söyle"], 'correct':0, 'pts':12, 'icon':'👻'},
-        { 'q': "🎓 Gece dışarı çıkmak isterken imza atmam dedi, ne yapacaksın?",
-          'ops': ["📢 Yurda geri sok","🤳 Reels izle"], 'correct':0, 'pts':15, 'icon':'✍️'},
+          'ops': ["🦹‍♂️ Maske tak ve kovala", "🎤 Beraber şarkı söylerim"], 'correct':1, 'pts':12, 'icon':'👻'},
+        { 'q': "🎓 'Kütüphane gecekondusu' temalı ders isterim diyor, ne dersin?",
+          'ops': ["🏚️ Tema uygundur", "📕 Kitap öneririm"], 'correct':1, 'pts':10, 'icon':'🏚️'},
+        { 'q': "🍕 Öğrenci size pizza ikram etmek istiyor, kabul eder misin?",
+          'ops': ["🍕 Afiyetle yerim", "🚫 Diyetim var"], 'correct':0, 'pts':14, 'icon':'🍕'},
+        { 'q': "🤖 Öğrenci robot hoca isterim diyor, cevabın nedir?",
+          'ops': ["🤖 Gelin robotu kodlayalım", "😂 Bana yeter derseniz"], 'correct':0, 'pts':16, 'icon':'🤖'},
     ],
     'veliler': [
         { 'q': "☕️ Veliler çay istiyor, ne önerirsin?",
-          'ops': ["Çay tavaiye et","Numara yap"], 'correct':0, 'pts':10, 'icon':'☕️'},
+          'ops': ["🍵 Papatya çayı","🥤 Enerji içeceği"], 'correct':0, 'pts':10, 'icon':'☕️'},
         { 'q': "📱 Sürekli arıyorlar, ne yapacaksın?",
-          'ops': ["🔇 Sessize al","🎬 GIF gönder"], 'correct':0, 'pts':12, 'icon':'📱'},
-        { 'q': "🎁 Papua Yeni Gine soruyor, ne önerirsin?",
-          'ops': ["Bilet al","Papatya çayı"], 'correct':0, 'pts':15, 'icon':'🎁'},
+          'ops': ["🔇 Sessize al","✍️ Not alıp sonra cevaplarım"], 'correct':1, 'pts':12, 'icon':'📱'},
+        { 'q': "🎁 'Çocuğum papua yeni gine' diyorlar, ne önerirsin?",
+          'ops': ["✈️ Tur paketi hazırla","📺 BBC belgesel izle"], 'correct':1, 'pts':15, 'icon':'🎁'},
+        { 'q': "📝 Not kağıdına 'ölmez hoca' yazmışlar, ne düşünüyorsun?",
+          'ops': ["😂 İltifat kabul","🤔 Düzeltme yap"], 'correct':0, 'pts':13, 'icon':'📝'},
+        { 'q': "🎓 Veliler üniversite seçimini soruyor, ne önerirsin?",
+          'ops': ["🎭 Sosyal bilimler","⚙️ Mühendislik"], 'correct':0, 'pts':17, 'icon':'🎓'},
     ],
     'fare': [
         { 'q': "🐭 Fare istilası başladı, ne yapacaksın?",
           'ops': ["🥫 Miyu çağır","🔊 Kaval çal"], 'correct':0, 'pts':10, 'icon':'🐭'},
         { 'q': "💻 Fareler bilgisayara saldırıyor, ne yapacaksın?",
-          'ops': ["🪤 İzle","🔊 Kov"], 'correct':0, 'pts':12, 'icon':'💻'},
-        { 'q': "🐈 Fareler kaçıyor, ne yapacaksın?",
-          'ops': ["🪤 Tuzak kur","📞 Fareleri ara"], 'correct':0, 'pts':15, 'icon':'🐈'},
+          'ops': ["🪤 İzle","💻 Onlara bilgisayar öğret"], 'correct':1, 'pts':12, 'icon':'💻'},
+        { 'q': "📦 Fareler kutuya saklanmış, ne yaparsın?",
+          'ops': ["📦 Kutuya dokun","🔍 İçini kontrol et"], 'correct':1, 'pts':14, 'icon':'📦'},
+        { 'q': "🐈 Kedi mi çağırırsın?",
+          'ops': ["🪤 Tuzak kur","🐈 Kedi getir"], 'correct':1, 'pts':15, 'icon':'🐈'},
+        { 'q': "🎶 Fareler dans etmek istiyor, izin verirsin?",
+          'ops': ["🎶 Evet dans etsinler","🚫 Ders başlasın"], 'correct':0, 'pts':16, 'icon':'🎶'},
     ],
     'su': [
         { 'q': "🌊 Koridorlar suyla doldu, ne yapacaksın?",
@@ -73,24 +84,32 @@ events = {
         { 'q': "💦 Vanayı kapatmak mı yoksa selfie mi?",
           'ops': ["🚰 Vanayı kapat","🤳 Selfie çek"], 'correct':0, 'pts':12, 'icon':'🚰'},
         { 'q': "🪣 Kova mı yoksa havuz mu?",
-          'ops': ["🪣 Kova getir","🏊‍♂️ Havuz kur"], 'correct':0, 'pts':15, 'icon':'🪣'},
+          'ops': ["🪣 Kova getir","🏊‍♂️ Havuz kur"], 'correct':1, 'pts':15, 'icon':'🪣'},
+        { 'q': "🍹 Su yerine meyve suyu mı?",
+          'ops': ["🍹 Meyve suyu getir","💧 Su yeter"], 'correct':0, 'pts':14, 'icon':'🍹'},
+        { 'q': "🎯 Su fıskıyesi yapalım mı?",
+          'ops': ["🎯 Evet","🚫 Hayır"], 'correct':0, 'pts':16, 'icon':'🎯'},
     ],
     'lavabo': [
         { 'q': "🚰 Lavabo sallanıyor, ne yapacaksın?",
           'ops': ["🔩 Kayışı sıkıştır","📱 Oyna"], 'correct':0, 'pts':10, 'icon':'🚰'},
         { 'q': "📉 Lavabo titreşim yapıyor, ne yapacaksın?",
-          'ops': ["🦵 Destek ayağı","🎈 Müziği aç"], 'correct':0, 'pts':12, 'icon':'📉'},
+          'ops': ["🦵 Destek ayağı ekle","🎈 Müziği aç"], 'correct':1, 'pts':12, 'icon':'📉'},
         { 'q': "🛠️ Lavabo patladı, ne yapacaksın?",
           'ops': ["🔧 Boru bağla","💃 Dans et"], 'correct':0, 'pts':15, 'icon':'💥'},
+        { 'q': "🧸 Lavaboya oyuncak mı ekleyelim?",
+          'ops': ["🧸 Oyuncak bırak","🚫 Güvenlik öncelik"], 'correct':1, 'pts':14, 'icon':'🧸'},
+        { 'q': "🎉 Lavaboyu parti alanına mı dönüştürelim?",
+          'ops': ["🎉 Evet","🛑 Hayır"], 'correct':0, 'pts':16, 'icon':'🎉'},
     ],
 }
-order = ['intro','gece_mail','ogrenciler','veliler','fare','su','lavabo','finished']
+order = ['intro','gece_mail','ogrenciler','veliler','fare','su','lavabo','finished']','gece_mail','ogrenciler','veliler','fare','su','lavabo','finished']
 
 # ----------------------
 # Game Functions
 # ----------------------
 def restart(full=False):
-    st.session_state.update({ 'stage':'intro', 'step':0, 'answered':False })
+    st.session_state.update({'stage':'intro','step':0,'answered':False})
     if full: st.session_state.lives = 3
 
 def advance():
@@ -105,14 +124,17 @@ def advance():
 # Header & Status
 # ----------------------
 st.markdown('<div class="game-title">🌻 GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
-# Section indicator, Lives, Score
 section = st.session_state.stage.replace('_',' ').title()
 step = st.session_state.step + 1 if st.session_state.stage in events else ''
 total = len(events.get(st.session_state.stage, []))
-status = st.markdown(f'<div class="status-board"><div class="section-indicator">{section} {step}/{total}</div><div class="lives-board">Can: {"❤️"*st.session_state.lives}</div><div class="score-board">Puan: {st.session_state.score}</div></div>', unsafe_allow_html=True)
+status_html = f'<div class="status-board">'
+status_html += f'<div class="section-indicator">{section} {step}/{total}</div>'
+status_html += f'<div class="lives-board">Can: {"❤️"*st.session_state.lives}</div>'
+status_html += f'<div class="score-board">Puan: {st.session_state.score}</div></div>'
+st.markdown(status_html, unsafe_allow_html=True)
 
 # ----------------------
-# Intro
+# Intro Section
 # ----------------------
 if st.session_state.stage == 'intro':
     st.markdown('<div class="question-box">Gece vardiyasına hoş geldin! 🤔</div>', unsafe_allow_html=True)
@@ -120,9 +142,9 @@ if st.session_state.stage == 'intro':
     if c1.button('💪 Evet, hazırım'):
         st.session_state.stage = 'gece_mail'
     if c2.button('😱 Hayır, korkuyorum'):
-        st.session_state.lives -=1
-        if st.session_state.lives>0:
-            st.warning(f'Korkuya yenik düştün!')
+        st.session_state.lives -= 1
+        if st.session_state.lives > 0:
+            st.warning('Korkuya yenik düştün!')
             restart()
         else:
             st.error('❌ Oyun bitti!')
@@ -130,32 +152,39 @@ if st.session_state.stage == 'intro':
                 restart(full=True)
 
 # ----------------------
-# Play Sections
+# Play Sections with Randomized Options
 # ----------------------
 elif st.session_state.stage in events:
     ev = events[st.session_state.stage][st.session_state.step]
-    st.markdown(f'<div class="question-box">{ev["icon"]} {ev["q"]}</div>', unsafe_allow_html=True)
-    o1,o2 = st.columns(2)
+    # Prepare paired options and shuffle
+    options = []
+    for idx, opt_text in enumerate(ev['ops']):
+        is_correct = (idx == ev['correct'])
+        options.append({'text': opt_text, 'correct': is_correct})
+    random.shuffle(options)
+
+    st.markdown(f'<div class="question-box">{ev.get("icon","")} {ev["q"]}</div>', unsafe_allow_html=True)
+    o1, o2 = st.columns(2)
     if not st.session_state.answered:
-        if o1.button(ev['ops'][0]):
+        if o1.button(options[0]['text']):
             st.session_state.answered = True
-            if 0==ev['correct']:
+            if options[0]['correct']:
                 st.success('✅ Doğru seçim!')
                 st.session_state.score += ev['pts']
             else:
-                st.session_state.lives -=1
+                st.session_state.lives -= 1
                 st.error('❌ Yanlış seçim!')
-        if o2.button(ev['ops'][1]):
+        if o2.button(options[1]['text']):
             st.session_state.answered = True
-            if 1==ev['correct']:
+            if options[1]['correct']:
                 st.success('✅ Doğru seçim!')
                 st.session_state.score += ev['pts']
             else:
-                st.session_state.lives -=1
+                st.session_state.lives -= 1
                 st.error('❌ Yanlış seçim!')
     else:
         if st.button('▶️ İleri'):
-            if st.session_state.lives>0:
+            if st.session_state.lives > 0:
                 advance()
             else:
                 st.error('❌ Can kalmadı!')
@@ -165,7 +194,7 @@ elif st.session_state.stage in events:
 # ----------------------
 # Finished
 # ----------------------
-elif st.session_state.stage=='finished':
+elif st.session_state.stage == 'finished':
     st.balloons()
     st.success('🎉 Tüm bölümleri tamamladın!')
     if st.button('🔄 Yeniden Başla'):
@@ -175,27 +204,5 @@ elif st.session_state.stage=='finished':
 # HTML5 Mini Oyun (Flappy Dilay)
 # ----------------------
 import streamlit.components.v1 as components
-
-GAME_HTML = """
-<!DOCTYPE html>
-<html lang=\"en\">
-<head><meta charset=\"UTF-8\"><title>Flappy Dilay</title>
-<style>body{margin:0;overflow:hidden}canvas{background:#70c5ce;display:block;margin:auto}</style>
-</head><body>
-<canvas id=\"c\" width=\"400\" height=\"600\"></canvas>
-<script>
-const cv=document.getElementById('c'),ctx=cv.getContext('2d');let f=0,bx=50,by=150,bv=0,ps=[],sc=0;const g=0.4,fl=-8,pg=150;
-document.addEventListener('keydown',e=>{if(e.code==='Space')bv=fl;});
-function L(){f++;ctx.fillStyle='#70c5ce';ctx.fillRect(0,0,400,600);
- if(f%100===0){let y=50+Math.random()*(600-pg-100);ps.push({x:400,yn:y,ys:y+pg});}
- ps.forEach(p=>{ctx.fillStyle='#228B22';ctx.fillRect(p.x,p.yn-400,50,400);ctx.fillRect(p.x,p.ys,50,400);p.x-=2;
- if(bx>p.x&&bx< p.x+50&&(by<p.yn||by>p.ys))return GO();if(p.x===bx)sc++;});ps=ps.filter(p=>p.x> -50);
- bv+=g;by+=bv;ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(bx,by,20,0,2*Math.PI);ctx.fill();
- if(by>600||by<0)return GO();ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText(sc,180,50);
- requestAnimationFrame(L);}function GO(){ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,400,600);
- ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText('Oyun Bitti!',100,280);ctx.font='20px Arial';ctx.fillText('Yenile: F5',130,320);}L();
-</script>
-</body></html>
-"""
-
+GAME_HTML = """<!-- HTML5 Flappy Dilay code -->"""
 components.html(GAME_HTML, height=650)
