@@ -1,94 +1,114 @@
-import pygame
-import sys
-import random
+import streamlit as st
 
-# Game Constants
-WIDTH, HEIGHT = 400, 600
-FPS = 60
-GRAVITY = 0.5
-FLAP_STRENGTH = -10
-PIPE_GAP = 150
-PIPE_FREQ = 1500  # milliseconds
+st.set_page_config(page_title="Flappy Dilay", page_icon="🌻", layout="centered")
 
-# Initialize Pygame
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    clock = pygame.time.Clock()
-    pygame.display.set_caption("Flappy Dilay")
+GAME_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Flappy Dilay</title>
+<style>
+  * { margin:0; padding:0; overflow:hidden; }
+  canvas { background: #70c5ce; display: block; margin: auto; }
+</style>
+</head>
+<body>
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-    # Load Assets
-    bird_img = pygame.image.load('assets/dilay_bird.png').convert_alpha()
-    bg_img = pygame.image.load('assets/background.png').convert()
-    pipe_img = pygame.image.load('assets/pipe.png').convert_alpha()
-    ground_img = pygame.image.load('assets/ground.png').convert()
+let frames = 0;
 
-    # Bird
-    bird_rect = bird_img.get_rect(center=(WIDTH//4, HEIGHT//2))
-    bird_vel = 0
+// Load images
+const bird = new Image();
+bird.src = 'https://i.imgur.com/6Xz5KZC.png';
+const pipeNorth = new Image();
+pipeNorth.src = 'https://i.imgur.com/6FLFQnh.png';
+const pipeSouth = new Image();
+pipeSouth.src = 'https://i.imgur.com/AU0XwK6.png';
 
-    # Pipes
-    pipes = []
-    SPAWNPIPE = pygame.USEREVENT
-    pygame.time.set_timer(SPAWNPIPE, PIPE_FREQ)
+// Game variables
+let birdX = 50, birdY = 150, birdV = 0;
+const gravity = 0.4, flap = -8;
+const gap = 150;
+let pipes = [];
+let score = 0;
 
-    score = 0
-    font = pygame.font.SysFont(None, 36)
+// Controls
+document.addEventListener('keydown', e => {
+  if(e.code === 'Space') birdV = flap;
+});
 
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                bird_vel = FLAP_STRENGTH
-            if event.type == SPAWNPIPE:
-                pipe_height = random.randint(100, HEIGHT - 200)
-                top_pipe = pipe_img.get_rect(midbottom=(WIDTH + 50, pipe_height - PIPE_GAP//2))
-                bottom_pipe = pipe_img.get_rect(midtop=(WIDTH + 50, pipe_height + PIPE_GAP//2))
-                pipes.append(top_pipe)
-                pipes.append(bottom_pipe)
+// Draw loop
+function loop(){
+  frames++;
+  ctx.fillStyle = "#70c5ce";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-        # Bird physics
-        bird_vel += GRAVITY
-        bird_rect.centery += bird_vel
+  // pipes
+  if(frames % 100 === 0){
+    let y = Math.floor(Math.random()*(canvas.height - gap - 200)) + 50;
+    pipes.push({ x: canvas.width, yNorth: y, ySouth: y + gap });
+  }
+  for(let i=0; i<pipes.length; i++){
+    let p = pipes[i];
+    ctx.drawImage(pipeNorth, p.x, p.yNorth - pipeNorth.height);
+    ctx.drawImage(pipeSouth, p.x, p.ySouth);
+    p.x -= 2;
 
-        # Move pipes
-        for pipe in pipes:
-            pipe.centerx -= 3
-        pipes = [p for p in pipes if p.right > -50]
+    // collision
+    if(birdX > p.x && birdX < p.x + pipeNorth.width){
+      if(birdY < p.yNorth || birdY + bird.height > p.ySouth){
+        return gameOver();
+      }
+    }
 
-        # Collision
-        if bird_rect.top <= 0 or bird_rect.bottom >= HEIGHT-100:
-            running = False
-        for pipe in pipes:
-            if bird_rect.colliderect(pipe):
-                running = False
+    // scoring
+    if(p.x === birdX) score++;
+  }
 
-        # Score
-        for pipe in pipes:
-            if pipe.centerx == bird_rect.centerx:
-                score += 0.5  # each pair counts as 1
+  pipes = pipes.filter(p => p.x > -pipeNorth.width);
 
-        # Draw
-        screen.blit(bg_img, (0, 0))
-        for pipe in pipes:
-            if pipe.bottom >= HEIGHT:
-                screen.blit(pipe_img, pipe)
-            else:
-                flip_pipe = pygame.transform.flip(pipe_img, False, True)
-                screen.blit(flip_pipe, pipe)
-        screen.blit(ground_img, (0, HEIGHT-100))
-        screen.blit(bird_img, bird_rect)
+  // bird physics
+  birdV += gravity;
+  birdY += birdV;
+  ctx.drawImage(bird, birdX - bird.width/2, birdY - bird.height/2);
 
-        score_surf = font.render(f"Score: {int(score)}", True, (255, 255, 255))
-        screen.blit(score_surf, (10, 10))
+  // boundaries
+  if(birdY + bird.height/2 > canvas.height || birdY - bird.height/2 < 0){
+    return gameOver();
+  }
 
-        pygame.display.update()
-        clock.tick(FPS)
+  // score display
+  ctx.fillStyle = "#fff";
+  ctx.font = "40px Arial";
+  ctx.fillText(score, canvas.width/2 - 10, 50);
 
-    pygame.quit()
-    sys.exit()
+  requestAnimationFrame(loop);
+}
 
-if __name__ == '__main__':
-    main()
+function gameOver(){
+  ctx.fillStyle = "rgba(0,0,0,0.5)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#fff";
+  ctx.font = "30px Arial";
+  ctx.fillText("Oyun Bitti!", 110, canvas.height/2 - 20);
+  ctx.font = "20px Arial";
+  ctx.fillText("Yeniden yüklemek için F5", 80, canvas.height/2 + 20);
+}
+
+bird.onload = () => {
+  pipeNorth.onload = () => {
+    pipeSouth.onload = () => {
+      loop();
+    };
+  };
+};
+</script>
+</body>
+</html>
+"""
+
+st.components.v1.html(GAME_HTML, height=650)
