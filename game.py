@@ -202,3 +202,84 @@ elif st.session_state.stage=='finished':
     st.success('🎉 Tüm bölümleri tamamladın!')
     if st.button('🔄 Yeniden Başla'):
         restart(full=True)
+
+# ----------------------
+# HTML5 Infinite Runner (Dino Stili)
+# ----------------------
+import streamlit.components.v1 as components
+
+# JavaScript canvas ile koşu oyunu
+GAME_HTML = """<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<title>Runner Dilay</title>
+<style>
+  body { margin:0; overflow:hidden; }
+  canvas { background:#fafafa; display:block; margin:auto; }
+</style>
+</head>
+<body>
+<canvas id=\"c\" width=\"800\" height=\"200\"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const icons = ["✉️","🗳️","✍️","🕒","📷","👩‍🎓","👻","🏚️","🍕","🤖","☕️","📱","🎁","📝","🎓","🐭","💻","📦","🐈","🎶","💧","🚰","🪣","🍹","🎯","🚰","📉","💥","🧸","🎉"];
+let frame = 0, speed = 6, gameOver = false;
+let dino = { x: 50, y: 150, vy: 0, gravity: 0.6, jump: -12, w: 40, h: 40 };
+let obstacles = [], score = 0;
+
+// Koşucu zıplatma
+document.addEventListener('keydown', e => { if(e.code==='Space' && dino.y===150) dino.vy = dino.jump; });
+
+function loop() {
+  frame++;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Zemin
+  ctx.fillStyle = '#888'; ctx.fillRect(0,190,canvas.width,10);
+
+  // Dino fizik
+  dino.vy += dino.gravity;
+  dino.y = Math.min(150, dino.y + dino.vy);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(dino.x, dino.y, dino.w, dino.h);
+
+  // Engel oluşturma
+  if(frame % 80 === 0) {
+    let icon = icons[Math.floor(Math.random()*icons.length)];
+    obstacles.push({ x: canvas.width, w: 30, icon });
+  }
+
+  // Engelleri çiz ve çarpışma
+  obstacles.forEach(ob => {
+    ob.x -= speed;
+    ctx.font = '30px Arial';
+    ctx.fillText(ob.icon, ob.x, 180);
+    if(ob.x < dino.x + dino.w && ob.x + ob.w > dino.x && dino.y + dino.h >= 190) {
+      gameOver = true;
+    }
+  });
+  obstacles = obstacles.filter(o => o.x + o.w > 0);
+
+  // Skor
+  score = Math.floor(frame/10);
+  ctx.fillStyle = '#000';
+  ctx.font = '20px Arial';
+  ctx.fillText('Skor: ' + score, 650, 30);
+
+  if(!gameOver) requestAnimationFrame(loop);
+  else {
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#fff';
+    ctx.font = '30px Arial';
+    ctx.fillText('Oyun Bitti! F5 ile yeniden', 260, 100);
+  }
+}
+loop();
+</script>
+</body>
+</html>"""
+
+components.html(GAME_HTML, height=240)
+
