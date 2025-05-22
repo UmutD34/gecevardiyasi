@@ -27,30 +27,21 @@ if st.session_state['game_choice'] is None:
 # ----------------------
 # Runner Game
 # ----------------------
-# Ensure scores list exists
-if 'scores' not in st.session_state:
-    st.session_state['scores'] = []
-
 # Embed HTML5 Runner
 components.html(GAME_HTML, height=300, scrolling=False)
 
-# ----------------------
-# Save Score After Game Over
-# ----------------------
+# After game: ask for name and score
 st.subheader("🏁 Koşu Oyunu Bitti!")
-
-# Son skoru kullanıcı girecek
-score_input = st.number_input("Son Skorunuz:", min_value=0, step=1)
+name = st.text_input("🏷️ İsminizi girin:")
+score = st.number_input("🕹️ Skorunuz:", min_value=0, step=1)
 if st.button("Skoru Kaydet"):
-    st.session_state['scores'].append({
-        'isim': st.session_state.get('player_name', 'Anonim'),
-        'skor': score_input
-    })
-    st.success(f"🏅 {st.session_state.get('player_name', 'Anonim')} skoru {score_input} kaydedildi!")
+    if name:
+        st.session_state['scores'].append({'isim': name, 'skor': score})
+        st.success(f"🏅 {name} skoru {score} kaydedildi!")
+    else:
+        st.warning("Lütfen bir isim girin!")
 
-# ----------------------
 # Skor Tablosu
-# ----------------------
 if st.button('🏆 Skor Tablosu'):
     scores = sorted(st.session_state['scores'], key=lambda x: x['skor'], reverse=True)
     for i, entry in enumerate(scores):
