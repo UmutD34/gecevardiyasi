@@ -1,176 +1,94 @@
-import streamlit as st
+import pygame
+import sys
+import random
 
-# ----------------------
-# Global CSS
-# ----------------------
-st.markdown(
-    """
-    <style>
-    .game-title { font-size:48px; font-weight:bold; text-align:center; margin-top:20px; }
-    .lives-board { font-size:20px; text-align:center; margin-bottom:20px; }
-    .question-box { background:#f0f0f5; padding:20px; border-radius:10px; margin:20px auto; max-width:800px; }
-    .btn-option { width:45%; padding:15px; font-size:18px; margin:10px; border-radius:8px; }
-    .btn-next { background-color:#2196F3; color:white; width:200px; padding:12px; margin:20px auto; display:block; border:none; border-radius:8px; font-size:18px; }
-    </style>
-    """, unsafe_allow_html=True)
+# Game Constants
+WIDTH, HEIGHT = 400, 600
+FPS = 60
+GRAVITY = 0.5
+FLAP_STRENGTH = -10
+PIPE_GAP = 150
+PIPE_FREQ = 1500  # milliseconds
 
-# ----------------------
-# State Yönetimi
-# ----------------------
-if 'stage' not in st.session_state:
-    st.session_state.stage = 'intro'
-    st.session_state.step = 0
-    st.session_state.lives = 3
-    st.session_state.answered = False
-    st.session_state.score = 0
+# Initialize Pygame
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    clock = pygame.time.Clock()
+    pygame.display.set_caption("Flappy Dilay")
 
-# ----------------------
-# Event Data (İçerik değişmeyecek)
-# ----------------------
-events = {
-    'gece_mail': [
-        { 'q': "📧 Gece vardiyasi baslarken gıcık bir mail ile karşılaştın ne yapacaksın ?",
-          'ops': ["🛡️ Dilay racon ile mail yazarım ", "📖 Görmezden gelirim"], 'correct':0, 'pts':10},
-        { 'q': "🔄 Mailini atarken otomatik düzeltme ile yazım yanlışı yaptın ne yapacaksın",
-          'ops': ["🔇 Bilgisayarı camdan at", "🏫 Masanın altına gir"], 'correct':0, 'pts':15},
-        { 'q': "🚀 Kameralar bozuldu ne yapacaksın",
-          'ops': ["📂 Kameraların açılması icin dua et", "🗑️ Kameraları Çöpe at"], 'correct':0, 'pts':20},
-    ],
-    'ogrenciler': [
-        { 'q': "💃🕺 Öğrenciler kartını unutmuş ne yapacaksın",
-          'ops': ["🔔 Bir daha unutma raconuyla kapıyı aç", "🎧 Kulaklık tak ve duyma"], 'correct':0, 'pts':8},
-        { 'q': "👻 Öğrenci gece hayalet gördügünü söyledi ne yapacaksın",
-          'ops': ["🦹‍♂️ Maske tak ve ondan uzaklaş", "🎤 Şarkı söyle"], 'correct':0, 'pts':12},
-        { 'q': "🎓 Öğrenci gece 3 de dışarı cıkmak isterken imza atmayacagım dedi ne yapacaksın.",
-          'ops': ["📢 Öğrenciyi yurda geri sok", "🤳 reels izle"], 'correct':0, 'pts':15},
-    ],
-    'veliler': [
-        { 'q': "🧔👩 Veliler şikayet ediyor! İlk hamle?",
-          'ops': ["☕ Çay içmelerini tavsiye et", "✏️ Hat düştü numarası yap"], 'correct':0, 'pts':10},
-        { 'q': "📱 Veliler sürekli arıyor ne yapacaksın",
-          'ops': ["🔇 Sessize al", "🎬 Komik GIF gönder"], 'correct':0, 'pts':12},
-        { 'q': "🎁 Veliler cocugum papua yeni gine ye gittigini bana haber vermedi nerede diye soruyor ne yapacaksın",
-          'ops': ["✏️ Velilere Papua Yeni Gine bileti al", "🌸 Papatya çayı öner"], 'correct':0, 'pts':15},
-    ],
-    'fare': [
-        { 'q': "🐭 Fareler istilaya geçti! Ne yapacaksın?",
-          'ops': ["🥫 Miyu çagır", "🔊 Kaval çal"], 'correct':0, 'pts':10},
-        { 'q': "💻 Fareler bilgisayara saldırıyor!",
-          'ops': ["🪤 Keyifle izle", "🔊 Onları kov"], 'correct':0, 'pts':12},
-        { 'q': "🐈 Fareler kaçıyor",
-          'ops': ["🪤 Tuzak kur", "📞 Telefonu farelere at"], 'correct':0, 'pts':15},
-    ],
-    'su': [
-        { 'q': "🌊 Koridorları su bastı",
-          'ops': ["🔧 Pompa çalıştır", "🛶 Kano kirala"], 'correct':0, 'pts':10},
-        { 'q': "💥 Su basıncı tehlikeli!",
-          'ops': ["🚰 Vanayı kapat", "🤳 Selfie çek"], 'correct':0, 'pts':12},
-        { 'q': "🪣 Tüm oda su doldu",
-          'ops': ["🪣 Kova getir", "🏊‍♂️ Havuz kur da yüzelim"], 'correct':0, 'pts':15},
-    ],
-    'lavabo': [
-        { 'q': "🚰 Lavabo sallanıyor! İlk hareket?",
-          'ops': ["🔩 Kayışı sıkıştır", "📱 gecevardiyasi oyununu oyna"], 'correct':0, 'pts':10},
-        { 'q': "📉 Lavabo titreşim yapıyor!",
-          'ops': ["🦵 Destek ayağı ekle", "🎈 Salla salla  salla salla titreeee müzigi dinle "], 'correct':0, 'pts':12},
-        { 'q': "🛠️ Lavabo patladı Su tahliyesi mi yoksa montaj?",
-          'ops': ["🔧 Boru bağla", "💃 Dans et"], 'correct':0, 'pts':15},
-    ],
-}
-order = ['intro','gece_mail','ogrenciler','veliler','fare','su','lavabo','finished']
+    # Load Assets
+    bird_img = pygame.image.load('assets/dilay_bird.png').convert_alpha()
+    bg_img = pygame.image.load('assets/background.png').convert()
+    pipe_img = pygame.image.load('assets/pipe.png').convert_alpha()
+    ground_img = pygame.image.load('assets/ground.png').convert()
 
-# ----------------------
-# Fonksiyonlar
-# ----------------------
-def restart(full=False):
-    st.session_state.stage = 'intro'
-    st.session_state.step = 0
-    st.session_state.answered = False
-    st.session_state.score = 0
-    if full:
-        st.session_state.lives = 3
+    # Bird
+    bird_rect = bird_img.get_rect(center=(WIDTH//4, HEIGHT//2))
+    bird_vel = 0
 
+    # Pipes
+    pipes = []
+    SPAWNPIPE = pygame.USEREVENT
+    pygame.time.set_timer(SPAWNPIPE, PIPE_FREQ)
 
-def advance():
-    st.session_state.step += 1
-    st.session_state.answered = False
-    if st.session_state.step >= len(events[st.session_state.stage]):
-        idx = order.index(st.session_state.stage)
-        st.session_state.stage = order[idx+1]
-        st.session_state.step = 0
+    score = 0
+    font = pygame.font.SysFont(None, 36)
 
-# ----------------------
-# Başlık ve Can Barı
-# ----------------------
-st.markdown('<div class="game-title">🌻 GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
-hearts = '❤️' * max(0, st.session_state.lives)
-st.markdown(f'<div class="lives-board">Can: {hearts}</div>', unsafe_allow_html=True)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                bird_vel = FLAP_STRENGTH
+            if event.type == SPAWNPIPE:
+                pipe_height = random.randint(100, HEIGHT - 200)
+                top_pipe = pipe_img.get_rect(midbottom=(WIDTH + 50, pipe_height - PIPE_GAP//2))
+                bottom_pipe = pipe_img.get_rect(midtop=(WIDTH + 50, pipe_height + PIPE_GAP//2))
+                pipes.append(top_pipe)
+                pipes.append(bottom_pipe)
 
-# ----------------------
-# Intro Bölümü
-# ----------------------
-if st.session_state.stage == 'intro':
-    st.markdown('<div class="question-box">Gece vardiyasına hoş geldin! 🤔</div>', unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    if c1.button('💪 Evet, hazırım', key='intro_yes'):
-        st.session_state.stage = 'gece_mail'
-    if c2.button('😱 Hayır, korkuyorum', key='intro_no'):
-        st.session_state.lives = max(0, st.session_state.lives - 1)
-        if st.session_state.lives > 0:
-            st.error(f'Korkuya yenik düştün! Canın azaldı.')
-            restart()
-        else:
-            st.error('❌ Oyun bitti! Can hakkın tükendi.')
-            if st.button('🔄 Yeniden Başla'):
-                restart(full=True)
+        # Bird physics
+        bird_vel += GRAVITY
+        bird_rect.centery += bird_vel
 
-# ----------------------
-# Oyun Bölümleri
-# ----------------------
-elif st.session_state.stage in events:
-    ev = events[st.session_state.stage][st.session_state.step]
-    st.markdown(f'<div class="question-box">{ev["q"]}</div>', unsafe_allow_html=True)
-    o1, o2 = st.columns(2)
-    if not st.session_state.answered:
-        if o1.button(ev['ops'][0], key=f'opt1_{st.session_state.stage}_{st.session_state.step}'):
-            st.session_state.answered = True
-            if 0 == ev['correct']:
-                st.success('✅ Doğru seçim!')
-                advance()
+        # Move pipes
+        for pipe in pipes:
+            pipe.centerx -= 3
+        pipes = [p for p in pipes if p.right > -50]
+
+        # Collision
+        if bird_rect.top <= 0 or bird_rect.bottom >= HEIGHT-100:
+            running = False
+        for pipe in pipes:
+            if bird_rect.colliderect(pipe):
+                running = False
+
+        # Score
+        for pipe in pipes:
+            if pipe.centerx == bird_rect.centerx:
+                score += 0.5  # each pair counts as 1
+
+        # Draw
+        screen.blit(bg_img, (0, 0))
+        for pipe in pipes:
+            if pipe.bottom >= HEIGHT:
+                screen.blit(pipe_img, pipe)
             else:
-                st.session_state.lives = max(0, st.session_state.lives - 1)
-                if st.session_state.lives > 0:
-                    st.error('❌ Yanlış seçim!')
-                else:
-                    st.error('❌ Oyun bitti! Can hakkın tükendi.')
-            
-        if o2.button(ev['ops'][1], key=f'opt2_{st.session_state.stage}_{st.session_state.step}'):
-            st.session_state.answered = True
-            if 1 == ev['correct']:
-                st.success('✅ Doğru seçim!')
-                advance()
-            else:
-                st.session_state.lives = max(0, st.session_state.lives - 1)
-                if st.session_state.lives > 0:
-                    st.error('❌ Yanlış seçim!')
-                else:
-                    st.error('❌ Oyun bitti! Can hakkın tükendi.')
-    else:
-        # Eğer answered True ise Next butonu
-        if st.button('▶️ İleri', key=f'next_{st.session_state.stage}_{st.session_state.step}'):
-            restart_section = False
-            if st.session_state.lives == 0:
-                restart_section = True
-            if restart_section:
-                restart(full=True)
-            else:
-                advance()
+                flip_pipe = pygame.transform.flip(pipe_img, False, True)
+                screen.blit(flip_pipe, pipe)
+        screen.blit(ground_img, (0, HEIGHT-100))
+        screen.blit(bird_img, bird_rect)
 
-# ----------------------
-# Oyun Bitiş
-# ----------------------
-elif st.session_state.stage == 'finished':
-    st.balloons()
-    st.success('🎉 Tüm bölümleri başarıyla tamamladın!')
-    if st.button('🔄 Yeniden Başla'):
-        restart(full=True)
+        score_surf = font.render(f"Score: {int(score)}", True, (255, 255, 255))
+        screen.blit(score_surf, (10, 10))
+
+        pygame.display.update()
+        clock.tick(FPS)
+
+    pygame.quit()
+    sys.exit()
+
+if __name__ == '__main__':
+    main()
