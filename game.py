@@ -41,7 +41,7 @@ function loop(){{f++;const speed=4+Math.floor(f/500);x.clearRect(0,0,800,200);x.
 r.vy+=r.g;r.y=Math.min(150,r.y+r.vy);x.font='40px Arial';x.fillText(r.s,r.x,r.y);
 if(f%(Math.max(30,80-Math.floor(f/1000)))===0)obs.push({{x:800,ic:icons[Math.random()*icons.length|0]}});obs.forEach(o=>{{o.x-=speed;x.font='30px Arial';x.fillText(o.ic,o.x,180);if(o.x<r.x+40&&o.x+30>r.x&&r.y>=150)over=true;}});obs=obs.filter(o=>o.x>-50);
 document.getElementById('score').innerText='Skor: '+Math.floor(f/10);
-if(!over)requestAnimationFrame(loop);else{{const s=Math.floor(f/10);const p=prompt('Oyun bitti! Skor: '+s+'\\nİsminiz?');window.parent.postMessage({{player:p||'Anonim',score:s}},'*');}}
+if(!over)requestAnimationFrame(loop);else{{const s=Math.floor(f/10);window.parent.postMessage({score:s}, '*');({{player:p||'Anonim',score:s}},'*');}}
 }}
 </script></body></html>"""
     res=components.html(GAME_HTML,height=300,scrolling=False,return_value=True)
