@@ -204,16 +204,16 @@ elif st.session_state.stage=='finished':
         restart(full=True)
 
 # ----------------------
-# HTML5 Infinite Runner (Dino Stili)
+# HTML5 Infinite Runner (Sunflower Runner)
 # ----------------------
 import streamlit.components.v1 as components
 
-# JavaScript canvas ile koşu oyunu
+# HTML5 canvas ile koşu oyunu: Ayçiçekli Runner
 GAME_HTML = """<!DOCTYPE html>
 <html lang=\"en\">
 <head>
 <meta charset=\"UTF-8\">
-<title>Runner Dilay</title>
+<title>Sunflower Runner</title>
 <style>
   body { margin:0; overflow:hidden; }
   canvas { background:#fafafa; display:block; margin:auto; }
@@ -224,45 +224,66 @@ GAME_HTML = """<!DOCTYPE html>
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-const icons = ["✉️","🗳️","✍️","🕒","📷","👩‍🎓","👻","🏚️","🍕","🤖","☕️","📱","🎁","📝","🎓","🐭","💻","📦","🐈","🎶","💧","🚰","🪣","🍹","🎯","🚰","📉","💥","🧸","🎉"];
-let frame = 0, speed = 6, gameOver = false;
-let dino = { x: 50, y: 150, vy: 0, gravity: 0.6, jump: -12, w: 40, h: 40 };
-let obstacles = [], score = 0;
+let frame = 0;
+let speed = 6;
+let gameOver = false;
 
-// Koşucu zıplatma
-document.addEventListener('keydown', e => { if(e.code==='Space' && dino.y===150) dino.vy = dino.jump; });
+// Runner as sunflower image
+const sun = new Image();
+sun.src = 'https://i.imgur.com/QPdE3G3.png';
+const runner = { x: 50, y: 150, vy: 0, gravity: 0.6, jump: -12, w: 40, h: 40 };
+
+// Esprili metinler
+const jokes = [
+  "Spam mail geldi!",
+  "Hayalet öğrenci... Boo!",
+  "Sinirli veli kapıda!",
+  "Fare partisi var!",
+  "Su sel oldu!",
+  "Lavabo temizlik zamanı!"
+];
+
+let obstacles = [];
+
+// Zıplama kontrolü
+document.addEventListener('keydown', e => { if(e.code==='Space' && runner.y===150) runner.vy = runner.jump; });
 
 function loop() {
   frame++;
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
   // Zemin
   ctx.fillStyle = '#888'; ctx.fillRect(0,190,canvas.width,10);
 
-  // Dino fizik
-  dino.vy += dino.gravity;
-  dino.y = Math.min(150, dino.y + dino.vy);
-  ctx.fillStyle = '#000';
-  ctx.fillRect(dino.x, dino.y, dino.w, dino.h);
+  // Runner fizik ve çizim (ayçiçeği zıplıyor)
+  runner.vy += runner.gravity;
+  runner.y = Math.min(150, runner.y + runner.vy);
+  ctx.drawImage(sun, runner.x, runner.y-10, runner.w, runner.h);
 
   // Engel oluşturma
   if(frame % 80 === 0) {
-    let icon = icons[Math.floor(Math.random()*icons.length)];
-    obstacles.push({ x: canvas.width, w: 30, icon });
+    let text = jokes[Math.floor(Math.random()*jokes.length)];
+    obstacles.push({ x: canvas.width, start: frame, text });
   }
 
   // Engelleri çiz ve çarpışma
   obstacles.forEach(ob => {
     ob.x -= speed;
-    ctx.font = '30px Arial';
-    ctx.fillText(ob.icon, ob.x, 180);
-    if(ob.x < dino.x + dino.w && ob.x + ob.w > dino.x && dino.y + dino.h >= 190) {
+    // Typewriter efekti
+    let len = Math.min(ob.text.length, Math.floor((frame - ob.start)/10));
+    let display = ob.text.substring(0, len);
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Arial';
+    ctx.fillText(display, ob.x, 180);
+    // Çarpışma kontrolü
+    if(ob.x < runner.x + runner.w && ob.x + 100 > runner.x && runner.y + runner.h >= 190) {
       gameOver = true;
     }
   });
-  obstacles = obstacles.filter(o => o.x + o.w > 0);
+  obstacles = obstacles.filter(o => o.x > -200);
 
   // Skor
-  score = Math.floor(frame/10);
+  let score = Math.floor(frame/10);
   ctx.fillStyle = '#000';
   ctx.font = '20px Arial';
   ctx.fillText('Skor: ' + score, 650, 30);
@@ -276,10 +297,10 @@ function loop() {
     ctx.fillText('Oyun Bitti! F5 ile yeniden', 260, 100);
   }
 }
-loop();
+// Başlat
+sun.onload = () => loop();
 </script>
 </body>
 </html>"""
 
 components.html(GAME_HTML, height=240)
-
