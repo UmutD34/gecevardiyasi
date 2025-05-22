@@ -25,84 +25,35 @@ if st.session_state['game_choice'] is None:
     st.stop()
 
 # ----------------------
-# Runner Game (Auto Score Save)
+# Runner Game
 # ----------------------
-# HTML5 Runner: prompt-based name & score postMessage
-GAME_HTML = """<!DOCTYPE html>
-<html lang=\"en\">
-<head>
-  <meta charset=\"UTF-8\">
-  <title>Sunflower Runner</title>
-  <style>
-    body { margin:0; overflow:hidden; font-family:Arial,sans-serif; }
-    canvas { background:#fafafa; display:block; margin:auto; }
-    #score{position:absolute;top:10px;width:100%;text-align:center;font-size:20px;}
-  </style>
-</head>
-<body>
-  <canvas id=\"c\" width=\"800\" height=\"200\"></canvas>
-  <div id=\"score\">Skor: 0</div>
-  <script>
-    const canvas = document.getElementById('c');
-    const ctx = canvas.getContext('2d');
-    let frame=0, over=false;
-    const runner={x:50,y:150,vy:0,gravity:0.6,jump:-12,symbol:'🌻',w:40,h:40};
-    const icons=['📧','👻','☕️','🐭','💦','🚰'];
-    let obstacles=[];
-    document.addEventListener('keydown', e => {
-      if(e.code==='Space' && runner.y===150) runner.vy=runner.jump;
-    });
-    canvas.addEventListener('touchstart', () => { if(runner.y===150) runner.vy=runner.jump; });
-    canvas.addEventListener('mousedown', () => { if(runner.y===150) runner.vy=runner.jump; });
-    function loop() {
-      frame++;
-      const speed = 4 + Math.floor(frame/500);
-      // Clear & ground
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle='#888'; ctx.fillRect(0,190,canvas.width,10);
-      // Runner
-      runner.vy += runner.gravity;
-      runner.y = Math.min(150, runner.y + runner.vy);
-      ctx.font='40px Arial'; ctx.fillText(runner.symbol, runner.x, runner.y);
-      ctx.font='12px Arial'; ctx.fillText('DILAY', runner.x, runner.y-10);
-      // Spawn
-      const interval = Math.max(30, 80 - Math.floor(frame/1000));
-      if(frame % interval === 0) {
-        obstacles.push({x:canvas.width, icon: icons[Math.floor(Math.random()*icons.length)]});
-      }
-      // Draw obstacles & collision
-      obstacles.forEach(ob => {
-        ob.x -= speed;
-        ctx.font='30px Arial'; ctx.fillText(ob.icon, ob.x, 180);
-        if(ob.x < runner.x + runner.w && ob.x + 30 > runner.x && runner.y >= 150) over = true;
-      });
-      obstacles = obstacles.filter(o => o.x > -50);
-      // Update score div
-      document.getElementById('score').innerText = 'Skor: ' + Math.floor(frame/10);
-      if(!over) requestAnimationFrame(loop);
-      else {
-        // Game over: prompt name, send score
-        const finalScore = Math.floor(frame/10);
-        const name = prompt('Oyun bitti! Skorunuz: ' + finalScore + '
-İsminizi girin:');
-        window.parent.postMessage({player: name||'Anonim', score: finalScore}, '*');
-      }
-    }
-    loop();
-  </script>
-</body>
-</html>"""
-# Embed and capture return value
-res = components.html(GAME_HTML, height=300, scrolling=False, return_value=True)
-if isinstance(res, dict) and 'score' in res:
-    st.session_state['scores'].append({'isim': res['player'], 'skor': res['score']})
-    st.success(f"🏅 {res['player']} skoru {res['score']} kaydedildi!")
-# Scoreboard button
+# Player name input
+if 'player_name' not in st.session_state:
+    name = st.text_input('🏷️ İsminizi girin:')
+    if not name:
+        st.warning('Lütfen geçerli bir isim girin!')
+        st.stop()
+    st.session_state['player_name'] = name
+# Initialize scores list
+if 'scores' not in st.session_state:
+    st.session_state['scores'] = []
+
+# Embed HTML5 Runner
+components.html(GAME_HTML, height=300, scrolling=False)
+
+# After game: manual score entry
+last_score = st.number_input('🕹️ Oyun bitti! Skorunuzu girin:', min_value=0, step=1)
+if st.button('Skoru Kaydet'):
+    st.session_state['scores'].append({'isim': st.session_state['player_name'], 'skor': last_score})
+    st.success(f"🏅 {st.session_state['player_name']} skoru {last_score} kaydedildi!")
+
+# Show scoreboard
 if st.button('🏆 Skor Tablosu'):
     scores = sorted(st.session_state['scores'], key=lambda x: x['skor'], reverse=True)
     for i, entry in enumerate(scores):
         medal = '🏆' if i==0 else ('🥈' if i==1 else ('🥉' if i==2 else ''))
         st.write(f"{medal} {entry['isim']} - {entry['skor']}")
+
 # Stop before text adventure
 st.stop()
     st.session_state['player_name'] = name
