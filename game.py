@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 st.set_page_config(page_title="Dilay'ı Koru", layout="centered")
@@ -6,7 +5,7 @@ st.set_page_config(page_title="Dilay'ı Koru", layout="centered")
 st.markdown("""
     <style>
         canvas {
-            background-color: #fdfcdc;
+            background-color: #fff3e0;
             border: 3px solid #333;
             border-radius: 12px;
         }
@@ -15,20 +14,14 @@ st.markdown("""
             color: #d32f2f;
             font-weight: bold;
             text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="title">🎮 Dilay'ı Koru: Gece Vardiyası Başlıyor!</div>', unsafe_allow_html=True)
+st.markdown('<div class="title">🎮 Dilay\\'ı Koru: Gece Vardiyası Başlıyor!</div>', unsafe_allow_html=True)
 
-# HTML5 Canvas + PyScript ile Python üzerinden oyun kontrolü
 st.components.v1.html("""
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-</head>
-<body>
 <canvas id="gameCanvas" width="350" height="550"></canvas>
 <script>
 const canvas = document.getElementById("gameCanvas");
@@ -123,6 +116,4 @@ setInterval(shoot, 500);
 ctx.font = "16px sans-serif";
 gameLoop();
 </script>
-</body>
-</html>
 """, height=580)
