@@ -50,10 +50,12 @@ if(!over)requestAnimationFrame(loop);else{{const s=Math.floor(f/10);window.paren
         st.success(f"🏅 {res['player']} skoru {res['score']} kaydedildi!")
 
     if st.button('🏆 Skor Tablosu'):
-        for i,e in enumerate(sorted(st.session_state.scores,key=lambda x:x['skor'],reverse=True)):
-            medal='🏆' if i==0 else '🥈' if i==1 else '🥉' if i==2 else ''
-            st.write(f\"{medal} {e['isim']} - {e['skor']}\")
-    st.stop()
+            if st.button('🏆 Skor Tablosu'):
+        scores_sorted = sorted(st.session_state.scores, key=lambda x: x['skor'], reverse=True)
+        for i, e in enumerate(scores_sorted):
+            medal = '🏆' if i == 0 else ('🥈' if i == 1 else ('🥉' if i == 2 else ''))
+            st.write(f"{medal} {e['isim']} - {e['skor']}")
+    st.stop()()
 
 # ========= TEXT ADVENTURE =========
 # --- State
