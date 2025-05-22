@@ -6,7 +6,7 @@ import streamlit.components.v1 as components
 # Welcome Popup
 # ----------------------
 if 'welcome_shown' not in st.session_state:
-    components.html("<script>alert('🌻 Sultanlar sultanı Dilay Sultan için gece vardiyasi oyunları serisi');</script>", height=0)
+    components.html("<script>alert('🌻 Hoşgeldiniz! Gece Vardiyasına Hazır Mısın, Dilay?');</script>", height=0)
     st.session_state['welcome_shown'] = True
 
 # ----------------------
@@ -27,86 +27,135 @@ if st.session_state['game_choice'] is None:
 # ----------------------
 # Runner Game
 # ----------------------
-if st.session_state['game_choice'] == 'runner':
-    import streamlit.components.v1 as components
-    GAME_HTML = """
-<!DOCTYPE html>
-<html lang="en">
+# Ensure scores list exists
+if 'scores' not in st.session_state:
+    st.session_state['scores'] = []
+
+# Embed HTML5 Runner
+components.html(GAME_HTML, height=300, scrolling=False)
+
+# ----------------------
+# Save Score After Game Over
+# ----------------------
+st.subheader("🏁 Koşu Oyunu Bitti!")
+
+# Son skoru kullanıcı girecek
+score_input = st.number_input("Son Skorunuz:", min_value=0, step=1)
+if st.button("Skoru Kaydet"):
+    st.session_state['scores'].append({
+        'isim': st.session_state.get('player_name', 'Anonim'),
+        'skor': score_input
+    })
+    st.success(f"🏅 {st.session_state.get('player_name', 'Anonim')} skoru {score_input} kaydedildi!")
+
+# ----------------------
+# Skor Tablosu
+# ----------------------
+if st.button('🏆 Skor Tablosu'):
+    scores = sorted(st.session_state['scores'], key=lambda x: x['skor'], reverse=True)
+    for i, entry in enumerate(scores):
+        medal = '🏆' if i==0 else ('🥈' if i==1 else ('🥉' if i==2 else ''))
+        st.write(f"{medal} {entry['isim']} - {entry['skor']}")
+
+# Stop before Text Adventure
+st.stop()
+    st.session_state['player_name'] = name
+# Initialize scores list
+if 'scores' not in st.session_state:
+    st.session_state['scores'] = []
+
+# Embed HTML5 Runner
+components.html(GAME_HTML, height=300, scrolling=False)
+
+# After game: manual score entry
+last_score = st.number_input('🕹️ Oyun bitti! Skorunuzu girin:', min_value=0, step=1)
+if st.button('Skoru Kaydet'):
+    st.session_state['scores'].append({'isim': st.session_state['player_name'], 'skor': last_score})
+    st.success(f"🏅 {st.session_state['player_name']} skoru {last_score} kaydedildi!")
+
+# Show scoreboard
+if st.button('🏆 Skor Tablosu'):
+    scores = sorted(st.session_state['scores'], key=lambda x: x['skor'], reverse=True)
+    for i, entry in enumerate(scores):
+        medal = '🏆' if i==0 else ('🥈' if i==1 else ('🥉' if i==2 else ''))
+        st.write(f"{medal} {entry['isim']} - {entry['skor']}")
+
+# Stop before text adventure
+st.stop()
+    st.session_state['player_name'] = name
+# Initialize score list
+if 'scores' not in st.session_state:
+    st.session_state['scores'] = []
+
+# ----------------------
+# Runner Game with Auto Score Save
+# ----------------------
+# Player name input
+if 'player_name' not in st.session_state:
+    name = st.text_input('🏷️ İsminizi girin:')
+    if not name:
+        st.warning('Lütfen geçerli bir isim girin!')
+        st.stop()
+    st.session_state['player_name'] = name
+# Initialize scores list
+if 'scores' not in st.session_state:
+    st.session_state['scores'] = []
+
+# Define GAME_HTML with postMessage on game over
+GAME_HTML = """<!DOCTYPE html>
+<html lang=\"en\">
 <head>
-<meta charset="UTF-8">
+<meta charset=\"UTF-8\">
 <title>Sunflower Runner</title>
-<style>
-  body { margin:0; overflow:hidden; font-family:Arial,sans-serif; }
-  #startScreen, #gameOverScreen {
-    position:absolute; top:0; left:0;
-    width:100%; height:100%;
-    background:rgba(255,255,255,0.9);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    z-index:2;
-  }
-  #gameOverScreen { display:none; }
-  button { font-size:1.2rem; padding:0.5rem 1rem; margin:0.5rem; border:none;
-             border-radius:8px; background:#2196F3; color:#fff; cursor:pointer; }
-  canvas { background:#fafafa; display:block; margin:auto; }
-</style>
+<style>body{margin:0;overflow:hidden;font-family:Arial;}canvas{background:#fafafa;display:block;margin:auto;}#startScreen,#gameOverScreen{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;}#gameOverScreen{display:none;}button{font-size:1.2rem;padding:.5rem 1rem;margin:.5rem;border:none;border-radius:8px;background:#2196F3;color:#fff;cursor:pointer;}</style>
 </head>
 <body>
-<div id="startScreen">
-  <div style="font-size:1.8rem; font-weight:bold;margin-bottom:0.5rem; text-align:center;">
-    🌻 Ayçiçeğim Dilay Gece Vardiyası ile Kapışıyor!
-  </div>
-  <div style="font-size:1.2rem; margin-bottom:1rem; text-align:center;">
-    Engelleri Aş ve Savaşı: DİLAY RACONNN
-  </div>
-  <button id="startBtn">OYUNA BAŞLA</button>
-</div>
-<canvas id="c" width="800" height="200"></canvas>
-<div id="gameOverScreen">
-  <div style="font-size:2rem; margin-bottom:1rem;">Oyun Bitti!</div>
-  <button id="restartBtn">Yeniden Başla</button>
-</div>
+<div id=\"startScreen\"><div style=\"font-size:1.8rem;font-weight:bold;margin-bottom:.5rem;text-align:center;\">🌻 Ayçiçeğim Dilay Gece Vardiyası ile Kapışıyor!</div><div style=\"font-size:1.2rem;margin-bottom:1rem;text-align:center;\">Engelleri Aş ve Savaşı: DİLAY RACONNN</div><button id=\"startBtn\">OYUNA BAŞLA</button></div>
+<canvas id=\"c\" width=\"800\" height=\"200\"></canvas>
+<div id=\"score\" style=\"text-align:center;font-size:20px;margin-top:5px;\">Skor: 0</div>
+<div id=\"gameOverScreen\"><div style=\"font-size:2rem;margin-bottom:1rem;\">Oyun Bitti!</div><button id=\"restartBtn\">Yeniden Başla</button></div>
 <script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-let frame=0, speed=4, over=false;
-const runner={x:50,y:150,vy:0,gravity:0.6,jump:-12,symbol:'🌻',w:40,h:40};
-const icons=['📧','👻','☕️','🐭','💦','🚰'];
-let obstacles=[];
-
-document.getElementById('startBtn').onclick = ()=>{document.getElementById('startScreen').style.display='none'; loop();};
-document.getElementById('restartBtn').onclick = ()=>location.reload();
-canvas.addEventListener('keydown', e=>{}); // placeholder
-// Jump controls
-document.addEventListener('keydown', e=>{ if(e.code==='Space'&&runner.y===150) runner.vy=runner.jump; });
-canvas.addEventListener('touchstart', ()=>{ if(runner.y===150) runner.vy=runner.jump; });
-canvas.addEventListener('mousedown', ()=>{ if(runner.y===150) runner.vy=runner.jump; });
-
-function loop(){
-  frame++;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  // ground
-  ctx.fillStyle='#888'; ctx.fillRect(0,190,canvas.width,10);
-  // runner
-  runner.vy+=runner.gravity; runner.y=Math.min(150,runner.y+runner.vy);
-  ctx.font='40px Arial'; ctx.fillText(runner.symbol,runner.x,runner.y);
-  ctx.font='12px Arial'; ctx.fillText('DILAY',runner.x,runner.y-10);
-  // spawn
-  if(frame%80===0) obstacles.push({x:canvas.width,icon:icons[Math.floor(Math.random()*icons.length)]});
-  // draw obstacles
-  obstacles.forEach(ob=>{ ob.x-=speed; ctx.font='30px Arial'; ctx.fillText(ob.icon,ob.x,180);
-    if(ob.x<runner.x+runner.w&&ob.x+30>runner.x&&runner.y>=150) over=true; });
-  obstacles=obstacles.filter(o=>o.x>-50);
-  // score
-  ctx.fillStyle='#000'; ctx.font='20px Arial'; ctx.fillText('Skor: '+Math.floor(frame/10),canvas.width/2-40,30);
-  // loop or over
-  if(!over) requestAnimationFrame(loop); else document.getElementById('gameOverScreen').style.display='flex';
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');let frame=0,over=false;
+const runner={x:50,y:150,vy:0,gravity:0.6,jump:-12,symbol:'🌻',w:40,h:40};const icons=['📧','👻','☕️','🐭','💦','🚰'];let obstacles=[];
+document.getElementById('startBtn').onclick=()=>{document.getElementById('startScreen').style.display='none';loop();};
+document.getElementById('restartBtn').onclick=()=>location.reload();
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&runner.y===150)runner.vy=runner.jump;});
+canvas.addEventListener('touchstart',()=>{if(runner.y===150)runner.vy=runner.jump;});canvas.addEventListener('mousedown',()=>{if(runner.y===150)runner.vy=runner.jump;});
+function loop(){frame++;const speed=4+Math.floor(frame/500);
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.fillStyle='#888';ctx.fillRect(0,190,canvas.width,10);
+ runner.vy+=runner.gravity;runner.y=Math.min(150,runner.y+runner.vy);
+ ctx.font='40px Arial';ctx.fillText(runner.symbol,runner.x,runner.y);
+ ctx.font='12px Arial';ctx.fillText('DILAY',runner.x,runner.y-10);
+ if(frame%(Math.max(30,80-Math.floor(frame/1000)))===0)obstacles.push({x:canvas.width,icon:icons[Math.floor(Math.random()*icons.length)]});
+ obstacles.forEach(ob=>{ob.x-=speed;ctx.font='30px Arial';ctx.fillText(ob.icon,ob.x,180);if(ob.x<runner.x+runner.w&&ob.x+30>runner.x&&runner.y>=150)over=true;});
+ obstacles=obstacles.filter(o=>o.x>-50);
+ document.getElementById('score').innerText='Skor: '+Math.floor(frame/10);
+ if(!over)requestAnimationFrame(loop);
+ else{
+   document.getElementById('gameOverScreen').style.display='flex';
+   // send score to Python
+   window.parent.postMessage({player:'"+encodeURIComponent("%player%")+"',score:Math.floor(frame/10)},'*');
+ }
 }
 </script>
 </body>
-</html>
-"""
-    components.html(GAME_HTML, height=240)
-    st.stop()
+</html>"""
+
+# Embed and capture result
+res = components.html(GAME_HTML, height=350, scrolling=False, return_value=True)
+if res:
+    st.session_state['scores'].append({'isim': res['player'], 'skor': res['score']})
+    st.success(f"🏅 {res['player']} skoru {res['score']} kaydedildi!")
+
+# Show scoreboard
+if st.button('🏆 Skor Tablosu'):
+    scores = sorted(st.session_state['scores'], key=lambda x: x['skor'], reverse=True)
+    for i, entry in enumerate(scores):
+        medal = '🏆' if i==0 else ('🥈' if i==1 else ('🥉' if i==2 else ''))
+        st.write(f"{medal} {entry['isim']} - {entry['skor']}")
+
+st.stop()()
 
 # ----------------------
 # Text Adventure Setup
