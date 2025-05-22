@@ -209,10 +209,11 @@ elif st.session_state.stage=='finished':
 import streamlit.components.v1 as components
 
 # HTML5 canvas ile koşu oyunu: Ayçiçekli Runner
-GAME_HTML = """<!DOCTYPE html>
-<html lang=\"en\">
+components.html("""
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset=\"UTF-8\">
+<meta charset="UTF-8">
 <title>Sunflower Runner</title>
 <style>
   body { margin:0; overflow:hidden; font-family:Arial,sans-serif; }
@@ -235,35 +236,28 @@ GAME_HTML = """<!DOCTYPE html>
 </head>
 <body>
 
-<div id=\"startScreen\">
-  <div style=\"font-size:2rem; margin-bottom:1rem;\">🌻 GECE VARDİYASI KOŞUCUSU</div>
-  <button id=\"startBtn\">OYUNA BAŞLA</button>
+<div id="startScreen">
+  <div style="font-size:2rem; margin-bottom:1rem;">🌻 GECE VARDİYASI KOŞUCUSU</div>
+  <button id="startBtn">OYUNA BAŞLA</button>
 </div>
 
-<canvas id=\"c\" width=\"800\" height=\"200\"></canvas>
+<canvas id="c" width="800" height="200"></canvas>
 
-<div id=\"gameOverScreen\">
-  <div style=\"font-size:2rem; margin-bottom:1rem;\">Oyun Bitti!</div>
-  <button id=\"restartBtn\">Yeniden Başla</button>
+<div id="gameOverScreen">
+  <div style="font-size:2rem; margin-bottom:1rem;">Oyun Bitti!</div>
+  <button id="restartBtn">Yeniden Başla</button>
 </div>
 
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-let frame = 0, speed = 6, over = false;
+let frame = 0, speed = 4, over = false;  // hız yavaşlatıldı
 
 // Runner as sunflower
 const runner = { x:50, y:150, vy:0, gravity:0.6, jump:-12, symbol:'🌻', w:40, h:40 };
 
-// Espirili metinler
-const jokes = [
-  "Spam mail geldi!",
-  "Hayalet öğrenci... Boo!",
-  "Sinirli veli kapıda!",
-  "Fare partisi var!",
-  "Su sel oldu!",
-  "Lavabo temizliği zamanı!"
-];
+// Engeller emojilerle
+const icons = ['✉️','👻','☕️','🐭','💧','🚰','🔔','🎁','🪤','🎉'];
 let obstacles = [];
 
 // Start & Restart Buttons
@@ -277,6 +271,9 @@ document.getElementById('restartBtn').onclick = () => location.reload();
 document.addEventListener('keydown', e => {
   if(e.code==='Space' && runner.y===150) runner.vy = runner.jump;
 });
+// Mobile touch and click
+canvas.addEventListener('touchstart', e => { if(runner.y===150) runner.vy = runner.jump; });
+canvas.addEventListener('mousedown', e => { if(runner.y===150) runner.vy = runner.jump; });
 
 function loop() {
   frame++;
@@ -294,20 +291,18 @@ function loop() {
 
   // Spawn obstacles
   if(frame % 80 === 0) {
-    let txt = jokes[Math.floor(Math.random()*jokes.length)];
-    obstacles.push({ x:canvas.width, start:frame, text:txt });
+    let icon = icons[Math.floor(Math.random()*icons.length)];
+    obstacles.push({ x:canvas.width, icon });
   }
 
   // Draw obstacles and check collision
   obstacles.forEach(ob => {
     ob.x -= speed;
-    let len = Math.min(ob.text.length, Math.floor((frame - ob.start)/10));
-    ctx.font = '20px Arial';
-    ctx.fillStyle = '#000';
-    ctx.fillText(ob.text.substring(0,len), ob.x, 180);
-    if(ob.x < runner.x + runner.w && ob.x + 200 > runner.x && runner.y >= 150) over = true;
+    ctx.font = '30px Arial';
+    ctx.fillText(ob.icon, ob.x, 180);
+    if(ob.x < runner.x + runner.w && ob.x + 30 > runner.x && runner.y >= 150) over = true;
   });
-  obstacles = obstacles.filter(o => o.x > -200);
+  obstacles = obstacles.filter(o => o.x > -50);
 
   // Score
   ctx.fillStyle = '#000'; ctx.font = '20px Arial';
@@ -318,6 +313,5 @@ function loop() {
 }
 </script>
 </body>
-</html>"""
-
-components.html(GAME_HTML, height=240)
+</html>
+""", height=240)(GAME_HTML, height=240)
