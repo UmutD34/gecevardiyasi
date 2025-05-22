@@ -28,6 +28,33 @@ if st.session_state['game_choice'] is None:
 # Runner Game
 # ----------------------
 if st.session_state['game_choice'] == 'runner':
+    # Ensure score list
+    st.session_state.setdefault('scores', [])
+
+    # Embed the runner HTML
+    components.html(GAME_HTML, height=300, scrolling=False)
+
+    # After game over: get name and score
+    st.subheader("🏁 Koşu Oyunu Bitti!")
+    name = st.text_input("🏷️ İsminizi girin:")
+    score_val = st.number_input("🕹️ Skorunuz:", min_value=0, step=1)
+    if st.button("Skoru Kaydet"):
+        if name:
+            st.session_state['scores'].append({'isim': name, 'skor': score_val})
+            st.success(f"🏅 {name} skoru {score_val} kaydedildi!")
+        else:
+            st.warning("Lütfen bir isim girin!")
+
+    # Skor Tablosu
+    if st.button('🏆 Skor Tablosu'):
+        scores = sorted(st.session_state['scores'], key=lambda x: x['skor'], reverse=True)
+        for i, entry in enumerate(scores):
+            medal = '🏆' if i==0 else ('🥈' if i==1 else ('🥉' if i==2 else ''))
+            st.write(f"{medal} {entry['isim']} - {entry['skor']}")
+
+    st.stop()
+# ----------------------
+if st.session_state['game_choice'] == 'runner':
     # Initialize scores list
     st.session_state.setdefault('scores', [])
 
