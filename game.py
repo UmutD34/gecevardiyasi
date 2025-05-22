@@ -99,15 +99,5 @@ def advance():
 
 # --- UI
 st.markdown('<h1 class=\"game-title\">🌻 DİLAY\'I KORU</h1>',unsafe_allow_html=True)
-st.markdown(f\"<div class='lives-board'>Can: {'❤️'*st.session_state.lives}</div>\",unsafe_allow_html=True)
-
-if st.session_state.stage=='intro':
-    st.markdown('<div class=\"question-box\">Gece vardiyasına hoş geldin!</div>',unsafe_allow_html=True)
-    if st.button('Başla'): st.session_state.stage='gece_mail'
-elif st.session_state.stage in events:
-    ev=events[st.session_state.stage][st.session_state.step]
-    st.markdown(f\"<div class='question-box'>{ev['q']}</div>\",unsafe_allow_html=True)
-    if st.button(ev['ops'][0]): st.session_state.answered=True; st.session_state.score+=ev['pts']; advance()
-    if st.button(ev['ops'][1]): st.session_state.lives-=1; st.session_state.answered=True; advance() if st.session_state.lives>0 else st.error('Oyun bitti!')
-elif st.session_state.stage=='finished':
-    st.balloons();st.success('Tüm bölümler tamam!')
+hearts_html = f"<div class='lives-board'>Can: {'❤️'*st.session_state.lives}</div>"
+st.markdown(hearts_html, unsafe_allow_html=True)
