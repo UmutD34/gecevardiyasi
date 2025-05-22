@@ -10,7 +10,6 @@ st.markdown(
     .lives-board { font-size:20px; text-align:center; margin-bottom:10px; }
     .question-box { background:#f0f0f5; padding:20px; border-radius:10px; margin:20px auto; max-width:800px; }
     .btn-option { width:45%; padding:15px; font-size:18px; margin:10px; border-radius:8px; }
-    .btn-next { background-color:#2196F3; color:white; width:200px; padding:12px; margin:20px auto; display:block; border:none; border-radius:8px; font-size:18px; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -100,27 +99,27 @@ def advance():
 # ----------------------
 # Layout
 # ----------------------
+# Hearts for lives
+hearts = '❤️' * max(0, st.session_state.lives)
+st.markdown(f'<div class="lives-board">Can: {hearts}</div>', unsafe_allow_html=True)
+
 st.markdown('<div class="game-title">🌻 GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="lives-board">Kalan Can: {st.session_state.lives}</div>', unsafe_allow_html=True)
 
 # Intro
 if st.session_state.stage=='intro':
     st.markdown('<div class="question-box">Gece vardiyasına hoş geldin! 🤔</div>', unsafe_allow_html=True)
     c1,c2 = st.columns(2)
     if c1.button('💪 Evet, hazırım', key='intro_yes'):
-        st.session_state.stage='gece_mail'
-        st.session_state.step = 0
+        st.session_state.stage='gece_mail'; st.experimental_rerun()
     if c2.button('😱 Hayır, korkuyorum', key='intro_no'):
-        st.session_state.lives -= 1
+        st.session_state.lives = max(0, st.session_state.lives - 1)
         if st.session_state.lives > 0:
-            st.error(f'Korkuya yenik düştün! Kalan can: {st.session_state.lives}')
-            restart()
-            st.stop()
+            st.warning(f'Korkuya yenik düştün! Canın azaldı: {hearts}')
+            st.experimental_rerun()
         else:
             st.error('❌ Oyun bitti! Can hakkın tükendi.')
             if st.button('🔄 Yeniden Başla'):
-                restart(full=True)
-            st.stop()
+                restart(full=True); st.experimental_rerun()
 
 # Oyun Bölümleri
 elif st.session_state.stage in events:
@@ -131,39 +130,31 @@ elif st.session_state.stage in events:
         if o1.button(ev['ops'][0], key=f'opt1_{st.session_state.stage}_{st.session_state.step}'):
             st.session_state.answered = True
             if 0 == ev['correct']:
-                st.success('✅ Doğru seçim!')
-                advance()
+                st.success('✅ Doğru seçim!'); advance(); st.experimental_rerun()
             else:
-                st.session_state.lives -= 1
+                st.session_state.lives = max(0, st.session_state.lives - 1)
                 if st.session_state.lives > 0:
-                    st.error(f'❌ Yanlış seçim! Kalan can: {st.session_state.lives}')
-                    restart()
-                    st.stop()
+                    st.error(f'❌ Yanlış seçim! Canın azaldı: {hearts}'); restart(); st.experimental_rerun()
                 else:
                     st.error('❌ Oyun bitti! Can hakkın tükendi.')
                     if st.button('🔄 Yeniden Başla'):
-                        restart(full=True)
-                    st.stop()
+                        restart(full=True); st.experimental_rerun()
         if o2.button(ev['ops'][1], key=f'opt2_{st.session_state.stage}_{st.session_state.step}'):
             st.session_state.answered = True
             if 1 == ev['correct']:
-                st.success('✅ Doğru seçim!')
-                advance()
+                st.success('✅ Doğru seçim!'); advance(); st.experimental_rerun()
             else:
-                st.session_state.lives -= 1
+                st.session_state.lives = max(0, st.session_state.lives - 1)
                 if st.session_state.lives > 0:
-                    st.error(f'❌ Yanlış seçim! Kalan can: {st.session_state.lives}')
-                    restart()
-                    st.stop()
+                    st.error(f'❌ Yanlış seçim! Canın azaldı: {hearts}'); restart(); st.experimental_rerun()
                 else:
                     st.error('❌ Oyun bitti! Can hakkın tükendi.')
                     if st.button('🔄 Yeniden Başla'):
-                        restart(full=True)
-                    st.stop()
+                        restart(full=True); st.experimental_rerun()
 
 # Bitti
 elif st.session_state.stage=='finished':
     st.balloons()
     st.success('🎉 Tüm bölümleri başarıyla tamamladın!')
     if st.button('🔄 Yeniden Başla'):
-        restart(full=True)
+        restart(full=True); st.experimental_rerun()
