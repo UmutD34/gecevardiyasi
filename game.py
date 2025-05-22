@@ -48,7 +48,7 @@ if st.session_state['game_choice'] == 'runner':
     🌻 Ayçiçeğim Dilay Gece Vardiyası ile Kapışıyor!
   </div>
   <div style="font-size:1.2rem; margin-bottom:1rem; text-align:center;">
-    Engelleri Aş ve Savaşı: DİLAY RACONNN
+    Engelleri Aş ve Savaş: DİLAY RACONNN
   </div>
   <button id="startBtn">OYUNA BAŞLA</button>
 </div>
