@@ -76,6 +76,7 @@ function loop() {
   ctx.fillStyle = '#888'; ctx.fillRect(0,190,canvas.width,10);
   runner.vy += runner.gravity; runner.y = Math.min(150, runner.y + runner.vy);
   ctx.font = '40px Arial'; ctx.fillText(runner.symbol, runner.x, runner.y);
+  // Character name label\ n  ctx.font = '12px Arial'; ctx.fillText('DILAY', runner.x, runner.y - 10);
   if(frame % 80 === 0) { let icon = icons[Math.floor(Math.random()*icons.length)]; obstacles.push({ x:canvas.width, icon }); }
   obstacles.forEach(ob => { ob.x -= speed; ctx.font = '30px Arial'; ctx.fillText(ob.icon, ob.x, 180);
     if(ob.x < runner.x + runner.w && ob.x + 30 > runner.x && runner.y >= 150) over = true; });
