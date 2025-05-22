@@ -114,7 +114,128 @@ st.markdown(
     """, unsafe_allow_html=True)
 
 # Event Data
-# (unchanged events dict here)
+# ----------------------
 
-# Game functions and text adventure logic...
-# ...
+events = {
+    'gece_mail': [
+        { 'q': "📧 Gece vardiyası baslarken gıcık bir mail ile karşılaştın, ne yapacaksın?",
+          'ops': ["🛡️ Dilay racon ile mail yazarım", "📖 Görmezden gelirim"], 'correct':0, 'pts':10},
+        { 'q': "🗑️ Spam klasörüne düşen maili geri getirir misin?",
+          'ops': ["🔄 Geri alırım", "🚮 Kalmasın"], 'correct':1, 'pts':12},
+        { 'q': "🔄 Yazım yanlışı uyarısı çıktı, ne yaparsın?",
+          'ops': ["✍️ Düzeltirim", "🙉 Hiç umursamam"], 'correct':0, 'pts':15},
+    ],
+    'ogrenciler': [
+        { 'q': "💳 Kartını unutmuş öğrenci kapıda, ne yapacaksın?",
+          'ops': ["🔔 Raconuyla açarım", "🎧 Duymuyorum"], 'correct':0, 'pts':8},
+        { 'q': "👻 Hayalet görmüş diyor, tepkin ne olur?",
+          'ops': ["🦹‍♂️ Maske takarım", "🎤 Şarkı söylerim"], 'correct':1, 'pts':12},
+        { 'q': "🎓 İmza attırmamak için 'selfie' isterse?",
+          'ops': ["🤳 Selfie istemem", "📢 Yurda geri sokarım"], 'correct':1, 'pts':15},
+    ],
+    'veliler': [
+        { 'q': "☕️ Veliler çay istiyor, önerin?",
+          'ops': ["🍵 Papatya çayı", "🥤 Enerji içeceği"], 'correct':0, 'pts':10},
+        { 'q': "📱 Sürekli aranıyorsun, ne yaparsın?",
+          'ops': ["🔇 Sessize alırım", "✍️ Not alırım"], 'correct':1, 'pts':12},
+        { 'q': "🎁 'Papua Yeni Gine'de diyorlar, ne önerirsin?",
+          'ops': ["✈️ Tur paketi", "📺 Belgesel izle"], 'correct':1, 'pts':15},
+    ],
+    'fare': [
+        { 'q': "🐭 Fare istilası başladı, ne yaparsın?",
+          'ops': ["🥫 Miyu çağırırım", "🔊 Kaval çalarım"], 'correct':0, 'pts':10},
+        { 'q': "💻 Bilgisayara fareler saldırıyor, ne yaparsın?",
+          'ops': ["🪤 Tuzak kurarım", "💻 Onlara kod öğretirim"], 'correct':1, 'pts':12},
+        { 'q': "🐈 Kedi çağırmak mı istersin?",
+          'ops': ["🐈 Çağırırım", "📞 Farelerle konuşurum"], 'correct':0, 'pts':15},
+    ],
+    'su': [
+        { 'q': "🌊 Koridor suyla doldu, ne yaparsın?",
+          'ops': ["🔧 Pompa çalıştırırım", "🛶 Kano kiralarım"], 'correct':0, 'pts':10},
+        { 'q': "💦 Vanayı kapatmalı mısın?",
+          'ops': ["🚰 Kapatırım", "🤳 Selfie çekerim"], 'correct':0, 'pts':12},
+        { 'q': "🪣 Kova mı yoksa havuz mu?",
+          'ops': ["🪣 Kova getiririm", "🏊‍♂️ Havuz kurarım"], 'correct':1, 'pts':15},
+    ],
+    'lavabo': [
+        { 'q': "🚰 Lavabo sallanıyor, ne yaparsın?",
+          'ops': ["🔩 Kayışı sıkıştırırım", "📱 Oynarım"], 'correct':0, 'pts':10},
+        { 'q': "📉 Lavabo titreşim yapıyor, ne yaparsın?",
+          'ops': ["🦵 Destek eklerim", "🎈 Müziği açarım"], 'correct':1, 'pts':12},
+        { 'q': "🛠️ Lavabo patladı, ne yaparsın?",
+          'ops': ["🔧 Boru bağlarım", "💃 Dans ederim"], 'correct':0, 'pts':15},
+    ],
+}
+
+# ----------------------
+# Text Adventure Functions
+# ----------------------
+def restart():
+    st.session_state.update({'stage':'intro','step':0,'answered':False})
+
+def advance():
+    st.session_state.step += 1
+    st.session_state.answered = False
+    if st.session_state.step >= len(events[st.session_state.stage]):
+        idx = list(events.keys()).index(st.session_state.stage)
+        stages = list(events.keys()) + ['finished']
+        st.session_state.stage = stages[idx+1]
+        st.session_state.step = 0
+
+# ----------------------
+# Text Adventure UI
+# ----------------------
+st.markdown(f"<h1 class='game-title'>🌻 DİLAY'I KORU</h1>", unsafe_allow_html=True)
+section = st.session_state.stage.replace('_',' ').title()
+step_display = st.session_state.step+1 if st.session_state.stage in events else ''
+total = len(events.get(st.session_state.stage, []))
+st.markdown(f"<div class='status-board'><div class='section-indicator'>{section} {step_display}/{total}</div><div class='lives-board'>Can: {'❤️'*st.session_state.lives}</div><div class='score-board'>Puan: {st.session_state.score}</div></div>", unsafe_allow_html=True)
+
+if st.session_state.stage == 'intro':
+    st.markdown("<div class='question-box'>Gece vardiyasına hoş geldin! 🤔</div>", unsafe_allow_html=True)
+    c1,c2 = st.columns(2)
+    if c1.button('💪 Evet, hazırım'):
+        st.session_state.stage = 'gece_mail'
+    if c2.button('😱 Hayır, korkuyorum'):
+        st.session_state.lives -= 1
+        if st.session_state.lives > 0:
+            st.error('Korkuya yenik düştün!')
+            restart()
+        else:
+            st.error('❌ Oyun bitti!')
+            if st.button('🔄 Yeniden Başla'):
+                restart(); st.experimental_rerun()
+elif st.session_state.stage in events:
+    ev = events[st.session_state.stage][st.session_state.step]
+    st.markdown(f"<div class='question-box'>{ev['q']}</div>", unsafe_allow_html=True)
+    o1,o2 = st.columns(2)
+    if not st.session_state.answered:
+        if o1.button(ev['ops'][0]):
+            st.session_state.answered = True
+            if 0==ev['correct']:
+                st.success('✅ Doğru seçim!')
+                st.session_state.score += ev['pts']
+            else:
+                st.session_state.lives -= 1
+                st.error('❌ Yanlış seçim!')
+        if o2.button(ev['ops'][1]):
+            st.session_state.answered = True
+            if 1==ev['correct']:
+                st.success('✅ Doğru seçim!')
+                st.session_state.score += ev['pts']
+            else:
+                st.session_state.lives -= 1
+                st.error('❌ Yanlış seçim!')
+    else:
+        if st.button('▶️ İleri'):
+            if st.session_state.lives>0:
+                advance()
+            else:
+                st.error('Can kalmadı!')
+                if st.button('🔄 Yeniden Başla'):
+                    restart(); st.experimental_rerun()
+elif st.session_state.stage=='finished':
+    st.balloons()
+    st.success('🎉 Tüm bölümleri tamamladın!')
+    if st.button('🔄 Yeniden Başla'):
+        restart(); st.experimental_rerun()
