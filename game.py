@@ -99,7 +99,7 @@ def advance():
 # ----------------------
 # Layout
 # ----------------------
-st.markdown('<div class="game-title">🌻 DİLAY\'I KORU</div>', unsafe_allow_html=True)
+st.markdown('<div class="game-title">🌻GECE VARDİYASI: GÖREV DİLAY\'I KORU</div>', unsafe_allow_html=True)
 st.markdown(f'<div class="score-board">Skor: {st.session_state.score}</div>', unsafe_allow_html=True)
 
 # Intro
