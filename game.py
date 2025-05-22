@@ -13,7 +13,7 @@ if 'game_choice' not in st.session_state:
 if st.session_state['game_choice'] is None:
     st.title("🌻 Hangi oyunu oynamak istersin?")
     col1, col2 = st.columns(2)
-    if col1.button("📝 GECE VARDİYASI KAPIŞMASI):
+    if col1.button("📝 GECE VARDİYASI KAPIŞMASI"):
         st.session_state['game_choice'] = 'text'
     if col2.button("🏃‍♂️ GECE VARDİYASI MARATON KOŞUSU"):
         st.session_state['game_choice'] = 'runner'
