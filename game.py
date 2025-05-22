@@ -155,22 +155,21 @@ document.getElementById('saveScoreBtn').onclick = function() {
 
     res = components.html(GAME_HTML, height=350, scrolling=False)
 
-    # --- Skor Tablosu Butonu ve Gösterimi ---
-    if st.button("🏆 Skor Tablosu"):
-        st.session_state.show_scores = not st.session_state.show_scores
-        time.sleep(0.1)
-        st.experimental_rerun()
+  # --- Skor Tablosu Butonu ve Gösterimi ---
+if st.button("🏆 Skor Tablosu"):
+    st.session_state.show_scores = not st.session_state.show_scores
 
-    if st.session_state.show_scores:
-        file_scores = load_score_file()
-        all_scores = st.session_state.scores.copy() if 'scores' in st.session_state else []
-        for fs in file_scores:
-            if fs not in all_scores:
-                all_scores.append(fs)
-        all_scores = sorted(all_scores, key=lambda x: x['skor'], reverse=True)
-        for i, e in enumerate(all_scores):
-            medal = '🏆' if i == 0 else ('🥈' if i == 1 else ('🥉' if i == 2 else ''))
-            st.write(f"{medal} {e['isim']} - {e['skor']}")
+if st.session_state.show_scores:
+    file_scores = load_score_file()
+    all_scores = st.session_state.scores.copy() if 'scores' in st.session_state else []
+    for fs in file_scores:
+        if fs not in all_scores:
+            all_scores.append(fs)
+    all_scores = sorted(all_scores, key=lambda x: x['skor'], reverse=True)
+    for i, e in enumerate(all_scores):
+        medal = '🏆' if i == 0 else ('🥈' if i == 1 else ('🥉' if i == 2 else ''))
+        st.write(f"{medal} {e['isim']} - {e['skor']}")
+
 
     st.stop()
 
