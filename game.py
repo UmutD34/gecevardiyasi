@@ -18,7 +18,7 @@ st.markdown(
     </style>
     """, unsafe_allow_html=True)
 
-: uncomment to view state
+
 # st.write(st.session_state)
 
 # ----------------------
