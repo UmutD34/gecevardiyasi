@@ -1,5 +1,13 @@
 import streamlit as st
 import random
+import streamlit.components.v1 as components
+
+# ----------------------
+# Welcome Popup
+# ----------------------
+if 'welcome_shown' not in st.session_state:
+    components.html("<script>alert('🌻 GÖTÜNÜ YERİM');</script>", height=0)
+    st.session_state['welcome_shown'] = True
 
 # ----------------------
 # Game Selection
@@ -60,7 +68,7 @@ if st.session_state['game_choice'] == 'runner':
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-let frame = 0, over = false;
+let frame=0, speed=4, over=false;
 const runner={x:50,y:150,vy:0,gravity:0.6,jump:-12,symbol:'🌻',w:40,h:40};
 const icons=['📧','👻','☕️','🐭','💦','🚰'];
 let obstacles=[];
