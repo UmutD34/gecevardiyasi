@@ -52,7 +52,7 @@ if st.session_state['game_choice'] == 'runner':
     diff_base = {"Kolay":3, "Orta":4, "Zor":5}[diff]
     diff_spawn = {"Kolay":100, "Orta":80, "Zor":60}[diff]
 
- GAME_HTML = f'''
+ GAME_HTML = '''
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>Sunflower Runner</title>
 <style>body{{margin:0;overflow:hidden;font-family:Arial}}canvas{{background:#fafafa;display:block;margin:auto}}
