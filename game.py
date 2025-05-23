@@ -42,18 +42,17 @@ if st.session_state.game_choice is None:
         st.session_state.game_choice = 'runner'
     st.stop()
 
-# =============================================================
-# ========================= RUNNER ============================
-# =============================================================
-if st.session_state.game_choice == 'runner':
+# ----------------------
+# Runner Game
+# ----------------------
+if st.session_state['game_choice'] == 'runner':
+    import time
     st.session_state.setdefault('scores', [])
-
-    # --- Difficulty selection ---
     diff = st.selectbox("Zorluk seviyesi", ["Kolay", "Orta", "Zor"], index=1)
     diff_base = {"Kolay":3, "Orta":4, "Zor":5}[diff]
     diff_spawn = {"Kolay":100, "Orta":80, "Zor":60}[diff]
 
-    GAME_HTML = f'''
+ GAME_HTML = f'''
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><title>Sunflower Runner</title>
 <style>body{{margin:0;overflow:hidden;font-family:Arial}}canvas{{background:#fafafa;display:block;margin:auto}}
@@ -81,7 +80,7 @@ document.addEventListener('keydown',e=>{{if(e.code==='Space'&&r.y===150)r.vy=r.j
 </script></body></html>
 '''
 
-    # Embed game and receive score
+
     data = components.html(GAME_HTML, height=350, scrolling=False, key='runner')
     if isinstance(data, dict) and 'score' in data:
         st.session_state.scores.append({'isim': data['player'], 'skor': data['score']})
@@ -89,27 +88,14 @@ document.addEventListener('keydown',e=>{{if(e.code==='Space'&&r.y===150)r.vy=r.j
         st.success(f"🏅 {data['player']} skoru {data['score']} kaydedildi! ⭐ Zorluk: {diff}")
 
     if st.button("🏆 Skor Tablosu"):
-        table = load_score_file() + st.session_state.scores
-        table_unique = [dict(t) for t in {tuple(d.items()) for d in table}]
-        table_sorted = sorted(table_unique, key=lambda x:x['skor'], reverse=True)
-        for i,e in enumerate(table_sorted):
-            medal='🏆' if i==0 else '🥈' if i==1 else '🥉' if i==2 else ''
+        all_scores = load_score_file() + st.session_state.scores
+        uniq = [dict(t) for t in {tuple(d.items()) for d in all_scores}]
+        uniq_sorted = sorted(uniq, key=lambda x: x['skor'], reverse=True)
+        for i,e in enumerate(uniq_sorted):
+            medal = '🏆' if i==0 else '🥈' if i==1 else '🥉' if i==2 else ''
             st.write(f"{medal} {e['isim']} - {e['skor']}")
+
     st.stop()
 
-# =============================================================
-# ================ TEXT ADVENTURE (unchanged) =================
-# =============================================================
-```
-
-Bu blok:
-- **Zorluk seçimi** (Kolay/Orta/Zor) ekler.
-- HTML içinde `base` hız ve `spawnInt` engel sıklığı zorlukla ayarlanır.
-- Skor prompt + otomatik `postMessage` ile Python’a gelir.
-- Kalıcı dosyaya kaydeder, aynı zamanda oturum listesine ekler.
-- Skor tablosu butonu tüm kalıcı skorları madalyalı listeler.
-- `st.stop()` ile metin macerasını ayırır.
-
-Bu kodu senin Runner Game parçanın **yerine** koy, `TEXT ADVENTURE` kısmına dokunma. Girintileri ve üçlü tırnakları olduğu gibi bırak.
-
-Her adım böylece netleşmiş olacak. قائ
+    
+  
