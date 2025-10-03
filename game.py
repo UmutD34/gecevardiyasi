@@ -41,12 +41,10 @@ if st.session_state['game_choice'] is None:
         st.session_state['game_choice'] = 'text'
     if c2.button("🏃‍♂️ GECE VARDİYASI MARATON KOŞUSU"):
         st.session_state['game_choice'] = 'runner'
-    if c3.button("Kuzey Işıkları 🌌🌠"):
-        st.session_state['game_choice'] = 'kuzey'
 
     # NEW: YouTube'a götüren üçüncü (ek) buton
     st.write("")  # küçük bir boşluk
-    if st.button("🎵 YouTube’da aç"):
+    if st.button("Kuzey Işıkları 🌌🌠"):
         components.html(f"<script>window.open({json.dumps(YOUTUBE_URL)}, '_blank');</script>", height=0)
 
     st.stop()
