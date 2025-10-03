@@ -12,7 +12,7 @@ FIRST_POP = (
     "Sözlerinin yaralarından geldigini bilmeseydim… Çoktan gitmiştim. "
     "Oysa keşke yüreğimi teraziye vurabilsem; o zaman anlardın… "
     "Belki biraz huzur gerek, o çocuğun başını okşayabilmek için. "
-    "Ben olmasam da… sen kuzey ışıklarında."
+    "Ben olmasam da… sen, kuzey ışıklarında."
 )
 
 SECOND_POP = "🌻 Sultanlar sultanı, Güzeller Güzeli, Zerafetin yer yüzünde ki gölgesi; Dilay Sultan için gece vardiyasi oyunları serisi"
