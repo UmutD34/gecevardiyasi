@@ -10,7 +10,7 @@ FIRST_POP = (
 Her konuştuğunda susturulduğunu bilmeseydim, çoktan gitmiştim.
 Çocukken, yaralı başın bir kez okşansaydı… çoktan gitmiştim.
 Sözlerinin yaralarından geldiğini bilmeseydim… çoktan gitmiştim.
-Oysa keşke yüregimi teraziye vurabilsem o zaman anlardın...
+Oysa keşke yüregimi teraziye vurabilsem belki o zaman anlardın...
 
 Ama bu sessizlik artık kalbini değil, mesafeni anlatıyor.
 Belki biraz huzur gerek, o çocuğun başını okşayabilmek için.
