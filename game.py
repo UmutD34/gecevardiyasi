@@ -9,8 +9,8 @@ FIRST_POP = (
    """Kendini anlatmakta ne kadar zorlandığını bilmeseydim, çoktan gitmiştim.
 Her konuştuğunda susturulduğunu bilmeseydim, çoktan gitmiştim.
 Çocukken, yaralı başın bir kez okşansaydı… çoktan gitmiştim.
-Sözlerinin yaradan geldiğini bilmeseydim… çoktan gitmiştim.
-Oysa teraziye vursam yüregimi o zaman anlardın...
+Sözlerinin yaralarından geldiğini bilmeseydim… çoktan gitmiştim.
+Oysa keşke yüregimi teraziye vurabilsem o zaman anlardın...
 
 Ama bu sessizlik artık kalbini değil, mesafeni anlatıyor.
 Belki biraz huzur gerek, o çocuğun başını okşayabilmek için.
