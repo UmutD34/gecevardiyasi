@@ -17,7 +17,7 @@ FIRST_POP = (
 
 SECOND_POP = "🌻 Sultanlar sultanı, Güzeller Güzeli, Zerafetin yer yüzünde ki gölgesi; Dilay Sultan için gece vardiyasi oyunları serisi"
 
-# NEW: YouTube hedefi
+# --- YouTube hedefi (senin verdiğin link) ---
 YOUTUBE_URL = "https://www.youtube.com/watch?v=taJr7qZGHPI&list=RDtaJr7qZGHPI&start_radio=1"
 
 def show_welcome_once(messages, state_key="welcome_shown"):
@@ -41,11 +41,28 @@ if st.session_state['game_choice'] is None:
         st.session_state['game_choice'] = 'text'
     if c2.button("🏃‍♂️ GECE VARDİYASI MARATON KOŞUSU"):
         st.session_state['game_choice'] = 'runner'
+    if c3.button("Kuzey Işıkları 🌌🌠"):
+        st.session_state['game_choice'] = 'kuzey'
 
-    # NEW: YouTube'a götüren üçüncü (ek) buton
+    # --- Mobil uyumlu YouTube seçenekleri ---
     st.write("")  # küçük bir boşluk
-    if st.button("Kuzey Işıkları 🌌🌠"):
-        components.html(f"<script>window.open({json.dumps(YOUTUBE_URL)}, '_blank');</script>", height=0)
+
+    # 1) Yeni sekmede aç (mobil + masaüstü)
+    try:
+        st.link_button("🎵 YouTube’da aç (yeni sekme)", YOUTUBE_URL)
+    except Exception:
+        st.markdown(
+            f'<a href="{YOUTUBE_URL}" target="_blank" rel="noopener noreferrer">'
+            '🎵 YouTube’da aç (yeni sekme)</a>',
+            unsafe_allow_html=True
+        )
+
+    # 2) Garanti çözüm: Aynı pencerede yönlendir
+    if st.button("📱 YouTube’u bu pencerede aç"):
+        components.html(
+            f"<script>window.top.location.href={json.dumps(YOUTUBE_URL)};</script>",
+            height=0
+        )
 
     st.stop()
 
@@ -100,7 +117,6 @@ let obstacles=[];
 
 document.getElementById('startBtn').onclick = ()=>{document.getElementById('startScreen').style.display='none'; loop();};
 document.getElementById('restartBtn').onclick = ()=>location.reload();
-canvas.addEventListener('keydown', e=>{}); // placeholder
 // Jump controls
 document.addEventListener('keydown', e=>{ if(e.code==='Space'&&runner.y===150) runner.vy=runner.jump; });
 canvas.addEventListener('touchstart', ()=>{ if(runner.y===150) runner.vy=runner.jump; });
@@ -241,9 +257,9 @@ if st.session_state.stage == 'intro':
     st.markdown('<div class="question-box">Gece vardiyasına hoş geldin! 🤔</div>', unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     if c1.button('💪 Evet, hazırım'): st.session_state.stage='gece_mail'
-    if c2.button('😱 Hayır, korkuyorum'): 
-        st.session_state.lives -=1
-        if st.session_state.lives>0:
+    if c2.button('😱 Hayır, korkuyorum'):
+        st.session_state.lives -= 1
+        if st.session_state.lives > 0:
             st.error('Korkuya yenik düştün!')
             restart()
         else:
@@ -252,18 +268,23 @@ if st.session_state.stage == 'intro':
 elif st.session_state.stage in events:
     ev = events[st.session_state.stage][st.session_state.step]
     st.markdown(f'<div class="question-box">{ev["q"]}</div>', unsafe_allow_html=True)
-    o1,o2 = st.columns(2)
+    o1, o2 = st.columns(2)
     if not st.session_state.answered:
         if o1.button(ev['ops'][0]):
-            st.session_state.answered=True
-            if ev['correct']==0: st.success('✅ Doğru seçim!'); advance()
-            else: st.session_state['lives']-=1; st.error('❌ Yanlış seçim!')
+            st.session_state.answered = True
+            if ev['correct'] == 0:
+                st.success('✅ Doğru seçim!'); advance()
+            else:
+                st.session_state.lives -= 1; st.error('❌ Yanlış seçim!')
         if o2.button(ev['ops'][1]):
-            st.session_state.answered=True
-            if ev['correct']==1: st.success('✅ Doğru seçim!'); advance()
-            else: st.session_state['lives']-=1; st.error('❌ Yanlış seçim!')
+            st.session_state.answered = True
+            if ev['correct'] == 1:
+                st.success('✅ Doğru seçim!'); advance()
+            else:
+                st.session_state.lives -= 1; st.error('❌ Yanlış seçim!')
     else:
-        if st.button('▶️ İleri'): advance() if st.session_state.lives>0 else (st.error('❌ Can kalmadı!'))
-elif st.session_state.stage=='finished':
-    st.balloons(); st.success('🎉 Tüm bölümleri tamamladın!');
+        if st.button('▶️ İleri'):
+            advance() if st.session_state.lives > 0 else (st.error('❌ Can kalmadı!'))
+elif st.session_state.stage == 'finished':
+    st.balloons(); st.success('🎉 Tüm bölümleri tamamladın!')
     if st.button('🔄 Yeniden Başla'): restart(full=True)
