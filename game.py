@@ -41,27 +41,19 @@ if st.session_state['game_choice'] is None:
         st.session_state['game_choice'] = 'text'
     if c2.button("🏃‍♂️ GECE VARDİYASI MARATON KOŞUSU"):
         st.session_state['game_choice'] = 'runner'
-    if c3.button("Kuzey Işıkları 🌌🌠"):
-        st.session_state['game_choice'] = 'kuzey'
+    
 
     # --- Mobil uyumlu YouTube seçenekleri ---
     st.write("")  # küçük bir boşluk
 
     # 1) Yeni sekmede aç (mobil + masaüstü)
     try:
-        st.link_button("🎵 YouTube’da aç (yeni sekme)", YOUTUBE_URL)
+        st.link_button("Kuzey Işıkları 🌌🌠", YOUTUBE_URL)
     except Exception:
         st.markdown(
             f'<a href="{YOUTUBE_URL}" target="_blank" rel="noopener noreferrer">'
             '🎵 YouTube’da aç (yeni sekme)</a>',
             unsafe_allow_html=True
-        )
-
-    # 2) Garanti çözüm: Aynı pencerede yönlendir
-    if st.button("📱 YouTube’u bu pencerede aç"):
-        components.html(
-            f"<script>window.top.location.href={json.dumps(YOUTUBE_URL)};</script>",
-            height=0
         )
 
     st.stop()
