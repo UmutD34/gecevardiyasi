@@ -6,12 +6,15 @@ import streamlit.components.v1 as components
 # İki Popup'ı sırayla (sadece 1 kez)
 # --------------------------------
 FIRST_POP = (
-    "Kendini anlatmakta ne kadar zorlandığını bilmeseydim, çoktan gitmiştim. "
-    "Her konuştuğunda susturulduğunu bilmeseydim, çoktan gitmiştim. "
-    "Çocukken, yaralı başın bir kez okşansaydı… Çoktan gitmiştim. "
-    "Sözlerinin yaralarından geldigini bilmeseydim… Çoktan gitmiştim. "
-    "Oysa keşke yüreğimi teraziye vurabilsem; o zaman anlardın… "
-    "Belki biraz huzur gerek, o çocuğun başını okşayabilmek için. "
+   "Kendini anlatmakta ne kadar zorlandığını bilmeseydim, çoktan gitmiştim.\n"
+    "Her konuştuğunda susturulduğunu bilmeseydim, çoktan gitmiştim.\n"
+    "Çocukken, yaralı başın bir kez okşansaydı… çoktan gitmiştim.\n"
+    "Sözlerinin yaradan geldiğini bilmeseydim… çoktan gitmiştim.\n"
+    "\n"
+    "Ama bu sessizlik artık kalbini değil, mesafeni anlatıyor.\n"
+    "Sevgiye küsmem; kendimi bekletmem.\n"
+    "Eğer bir söz gelecekse, adı açık söz, vakti yakın olsun.\n"
+    "Belki biraz huzur gerek, o çocuğun başını okşayabilmek için.\n"
     "Ben olmasam da… sen, kuzey ışıklarında."
 )
 
