@@ -15,7 +15,7 @@ FIRST_POP = (
     "Ben olmasam da… sen kuzey ışıklarında."
 )
 
-SECOND_POP = "🎮 Hoş geldin. (Bu metni dilediğin mesajla değiştir.)"
+SECOND_POP = "🌻 Sultanlar sultanı, Güzeller Güzeli, Zerafetin yer yüzünde ki gölgesi; Dilay Sultan için gece vardiyasi oyunları serisi"
 
 def show_welcome_once(messages, state_key="welcome_shown"):
     if not st.session_state.get(state_key):
