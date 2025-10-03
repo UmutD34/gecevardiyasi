@@ -17,6 +17,9 @@ FIRST_POP = (
 
 SECOND_POP = "🌻 Sultanlar sultanı, Güzeller Güzeli, Zerafetin yer yüzünde ki gölgesi; Dilay Sultan için gece vardiyasi oyunları serisi"
 
+# NEW: YouTube hedefi
+YOUTUBE_URL = "https://www.youtube.com/watch?v=taJr7qZGHPI&list=RDtaJr7qZGHPI&start_radio=1"
+
 def show_welcome_once(messages, state_key="welcome_shown"):
     if not st.session_state.get(state_key):
         js = "<script>" + "".join([f"alert({json.dumps(m)});" for m in messages]) + "</script>"
@@ -33,11 +36,19 @@ if 'game_choice' not in st.session_state:
 
 if st.session_state['game_choice'] is None:
     st.title("🌻 Hangi oyunu oynamak istersin?")
-    c1, c2 = st.columns(2)
+    c1, c2 , c3 = st.columns(3)
     if c1.button("📝 GECE VARDİYASI KAPIŞMASI"):
         st.session_state['game_choice'] = 'text'
     if c2.button("🏃‍♂️ GECE VARDİYASI MARATON KOŞUSU"):
         st.session_state['game_choice'] = 'runner'
+    if c3.button("Kuzey Işıkları 🌌🌠"):
+        st.session_state['game_choice'] = 'kuzey'
+
+    # NEW: YouTube'a götüren üçüncü (ek) buton
+    st.write("")  # küçük bir boşluk
+    if st.button("🎵 YouTube’da aç"):
+        components.html(f"<script>window.open({json.dumps(YOUTUBE_URL)}, '_blank');</script>", height=0)
+
     st.stop()
 
 # ----------------------
@@ -248,11 +259,11 @@ elif st.session_state.stage in events:
         if o1.button(ev['ops'][0]):
             st.session_state.answered=True
             if ev['correct']==0: st.success('✅ Doğru seçim!'); advance()
-            else: st.session_state.lives-=1; st.error('❌ Yanlış seçim!')
+            else: st.session_state['lives']-=1; st.error('❌ Yanlış seçim!')
         if o2.button(ev['ops'][1]):
             st.session_state.answered=True
             if ev['correct']==1: st.success('✅ Doğru seçim!'); advance()
-            else: st.session_state.lives-=1; st.error('❌ Yanlış seçim!')
+            else: st.session_state['lives']-=1; st.error('❌ Yanlış seçim!')
     else:
         if st.button('▶️ İleri'): advance() if st.session_state.lives>0 else (st.error('❌ Can kalmadı!'))
 elif st.session_state.stage=='finished':
