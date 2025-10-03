@@ -1,17 +1,29 @@
 import streamlit as st
-import random
+import json
 import streamlit.components.v1 as components
 
-# ----------------------
-# Welcome Popup
-# ----------------------
-if 'welcome_shown' not in st.session_state:
-    components.html("<script>alert('ss');</script>", height=0)
-    st.session_state['welcome_shown'] = True
+# --------------------------------
+# İki Popup'ı sırayla (sadece 1 kez)
+# --------------------------------
+FIRST_POP = (
+    "Kendini anlatmakta ne kadar zorlandığını bilmeseydim, çoktan gitmiştim. "
+    "Her konuştuğunda susturulduğunu bilmeseydim, çoktan gitmiştim. "
+    "Çocukken, yaralı başın bir kez okşansaydı… Çoktan gitmiştim. "
+    "Sözlerinin yaralarından geldigini bilmeseydim… Çoktan gitmiştim. "
+    "Oysa keşke yüreğimi teraziye vurabilsem; o zaman anlardın… "
+    "Belki biraz huzur gerek, o çocuğun başını okşayabilmek için. "
+    "Ben olmasam da… sen kuzey ışıklarında."
+)
 
-if 'welcome_shown' not in st.session_state:
-    components.html("<script>alert('🌻 Sultanlar sultanı, Güzeller Güzeli, Zerafetin yer yüzünde ki gölgesi; Dilay Sultan için gece vardiyasi oyunları serisi');</script>", height=0)
-    st.session_state['welcome_shown'] = True
+SECOND_POP = "🎮 Hoş geldin. (Bu metni dilediğin mesajla değiştir.)"
+
+def show_welcome_once(messages, state_key="welcome_shown"):
+    if not st.session_state.get(state_key):
+        js = "<script>" + "".join([f"alert({json.dumps(m)});" for m in messages]) + "</script>"
+        components.html(js, height=0)
+        st.session_state[state_key] = True
+
+show_welcome_once([FIRST_POP, SECOND_POP])
 
 # ----------------------
 # Game Selection
