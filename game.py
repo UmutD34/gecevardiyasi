@@ -5,7 +5,7 @@ st.set_page_config(page_title="Elveda", page_icon="🌻")
 
 HEADLINE = """Bu uygulama kapatıldı.
 Sunucu 07.10.2025 00:01 (Europe/Istanbul) tarihinde durdurulacaktır.
-Elveda 🌻"""
+"""
 
 TOTAL_PARTS = 7609
 DEADLINE_ISO = "2025-10-07T00:01:00+03:00"   # Yeni hedef: 07 Ekim 2025 00:01 (TR)
