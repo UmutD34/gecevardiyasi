@@ -4,12 +4,12 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title="Elveda", page_icon="🌻")
 
 HEADLINE = """Bu uygulama kapatıldı.
-Sunucu 06.10.2025 00:01 (Europe/Istanbul) tarihinde durdurulacaktır.
+Sunucu 07.10.2025 00:01 (Europe/Istanbul) tarihinde durdurulacaktır.
 Elveda 🌻"""
 
 TOTAL_PARTS = 7609
-DEADLINE_ISO = "2025-10-06T00:01:00+03:00"   # 06 Ekim 2025 00:01 (TR)
-ANCHOR_ISO   = "2025-10-04T22:11:00+03:00"   # Başlangıç: 04 Ekim 2025 22:11 (TR)
+DEADLINE_ISO = "2025-10-07T00:01:00+03:00"   # Yeni hedef: 07 Ekim 2025 00:01 (TR)
+ANCHOR_ISO   = "2025-10-04T22:11:00+03:00"   # Başlangıç sabiti: 04 Ekim 2025 22:11 (TR)
 
 components.html(f"""
 <div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif; -webkit-text-size-adjust:100%;
@@ -45,6 +45,7 @@ components.html(f"""
         animation: wipe 2.2s ease-in-out infinite;
       }}
       #erase.done::before, #erase.done::after {{ display:none; }}
+
       @keyframes strike {{
         0% {{ width:0; opacity:0; }}
         10%{{ opacity:1; }}
@@ -101,14 +102,25 @@ components.html(f"""
   const ANCHOR   = new Date("{ANCHOR_ISO}").getTime();
   const TOTAL    = {TOTAL_PARTS};
 
-  const spanTotal = DEADLINE - ANCHOR > 0 ? (DEADLINE - ANCHOR) : 1;
+  // Aralık: 04.10.25 22:11 → 07.10.25 00:01
+  const spanTotal = Math.max(1, DEADLINE - ANCHOR);
 
-  const cdEl = document.getElementById('cd');
-  const eraseEl = document.getElementById('erase');
-  const delEl = document.getElementById('deleted');
-  const remEl = document.getElementById('remaining');
+  const cdEl   = document.getElementById('cd');
+  const eraseEl= document.getElementById('erase');
+  const delEl  = document.getElementById('deleted');
+  const remEl  = document.getElementById('remaining');
   const dotsEl = document.getElementById('dots');
   const fillEl = document.getElementById('fill');
+
+  // Silinen sayının GERİYE gitmemesi için yerel hafıza
+  const LS_MAX_DELETED = 'gv_max_deleted';
+  function getMaxDeleted() {{
+    const v = Number(localStorage.getItem(LS_MAX_DELETED));
+    return Number.isFinite(v) ? v : 0;
+  }}
+  function setMaxDeleted(v) {{
+    localStorage.setItem(LS_MAX_DELETED, String(v));
+  }}
 
   function pad(n) {{ return (n<10?'0':'')+n; }}
   function trNum(x) {{ return x.toLocaleString('tr-TR'); }}
@@ -129,23 +141,25 @@ components.html(f"""
       cdEl.textContent = (d>0 ? (d + " gün ") : "") + pad(h)+":"+pad(m)+":"+pad(s);
     }}
 
-    // Parçacıklar (04.10.25 22:11 → 06.10.25 00:01 aralığına sabit)
+    // Parçacıklar (doğrusal; anchor→deadline)
     let ratio = (now - ANCHOR) / spanTotal;   // 0→1
-    if (ratio < 0) ratio = 0;
-    if (ratio > 1) ratio = 1;
+    ratio = Math.min(1, Math.max(0, ratio));
 
-    const deleted = Math.round(TOTAL * ratio);
+    const deletedRaw = Math.round(TOTAL * ratio);
+    const deleted = Math.max(deletedRaw, getMaxDeleted());  // asla geri düşme
     const remaining = TOTAL - deleted;
 
     delEl.textContent = trNum(deleted);
     remEl.textContent = trNum(remaining);
     fillEl.style.width = (deleted / TOTAL * 100).toFixed(2) + "%";
 
+    setMaxDeleted(deleted);
+
     // Bittiğinde mesajı değiştir
     if (ratio >= 1) {{
       eraseEl.classList.add('done');
       eraseEl.textContent = "İşlem tamamlandı — sunucu kapanıyor";
-      dotsEl && (dotsEl.textContent = "");
+      if (dotsEl) dotsEl.textContent = "";
     }}
   }}
 
@@ -153,8 +167,8 @@ components.html(f"""
   let dot = 0;
   function tickDots(){{
     dot = (dot + 1) % 4;
-    if (document.getElementById('erase').classList.contains('done')) return;
-    dotsEl.textContent = ".".repeat(dot);
+    if (eraseEl.classList.contains('done')) return;
+    if (dotsEl) dotsEl.textContent = ".".repeat(dot);
   }}
 
   tick();
