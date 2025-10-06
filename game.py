@@ -15,8 +15,8 @@ components.html(f"""
 <div style="
   font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;
   -webkit-text-size-adjust:100%;
-  display:flex;justify-content:center;">
-  <div style="max-width:900px;margin:20px;text-align:center;width:100%;">
+  display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,24px);">
+  <div style="max-width:900px;margin:20px;text-align:center;width:100%;padding-bottom:24px;">
 
     <h2 style="margin:0 0 12px 0;font-weight:800;line-height:1.35;">
       {HEADLINE.replace('\\n','<br>')}
@@ -25,7 +25,10 @@ components.html(f"""
     <style>
       :root {{
         --accent:#d32f2f;
+        --muted:#666;
       }}
+
+      /* CANLI */
       #live #cd {{
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono','Courier New', monospace;
         font-weight:800; letter-spacing:.5px;
@@ -73,10 +76,12 @@ components.html(f"""
       #live #dots {{ display:inline-block; width:1.5ch; text-align:left; margin-left:2px; }}
 
       /* Bitiş sayfası */
-      #finish {{ display:none; text-align:center; }}
+      #finish {{ display:none; text-align:center; padding-bottom: env(safe-area-inset-bottom,24px); }}
+
       #finish .title {{
         font-weight:800; font-size: clamp(18px, 5.6vw, 28px); margin-top:10px;
       }}
+
       #finish .summary {{
         display:grid; grid-template-columns: 1fr 1fr; gap:10px; 
         justify-items:center; align-items:center; margin:12px 0;
@@ -86,14 +91,22 @@ components.html(f"""
         display:inline-block; padding:2px 8px; border-radius:10px; 
         background:#eee; font-size:12px; margin-left:6px; color:#555;
       }}
+
       #finish ul {{ list-style: none; padding:0; margin:10px auto; max-width:700px; text-align:left; }}
+      /* mobil uyumlu liste öğeleri: wrap ve responsive */
       #finish li {{ 
-        padding:8px 12px; margin:6px 0; background:#fafafa; border:1px solid #eee; border-radius:8px;
-        display:flex; align-items:center; justify-content:space-between;
+        padding:10px 12px; margin:8px 0; background:#fafafa; border:1px solid #eee; border-radius:10px;
+        display:flex; align-items:center; justify-content:space-between; gap:12px; 
+        box-sizing:border-box; flex-wrap:wrap;
       }}
-      #finish li .name {{ font-weight:700; }}
+      #finish li .name {{ font-weight:700; flex:1 1 60%; min-width:0; text-align:left; word-break:break-word; }}
+      #finish li .badge {{
+        flex:0 0 auto; margin-left:8px; background:#fff0f0; color:#b71c1c;
+        padding:6px 8px; border-radius:8px; font-size:12px; white-space:nowrap;
+      }}
+
       #finish .offline {{ color:#b71c1c; font-weight:800; margin-top:12px; }}
-      #finish .muted {{ color:#666; font-size:13px; }}
+      #finish .muted {{ color:var(--muted); font-size:13px; margin-top:10px; line-height:1.4; }}
 
       .fade-in {{ animation: fade .5s ease-out forwards; }}
       @keyframes fade {{ from{{opacity:0}} to{{opacity:1}} }}
@@ -101,6 +114,7 @@ components.html(f"""
       @media (max-width:520px) {{
         #live #stats, #finish .summary {{ grid-template-columns: 1fr; }}
         h2 {{ font-size: 18px; }}
+        #finish li {{ padding:12px; }}
       }}
     </style>
 
@@ -134,7 +148,7 @@ components.html(f"""
         <li><span class="name">Gece vardiyası müdürle savaş</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
         <li><span class="name">Gece vardiyası yalnızlık koruyucu eldiveni yakala</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
         <li><span class="name">Gece vardiyası karanlık asansörle savaş</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
-        <li><span class="name">Gece vardiyası ayçiçegimi kötü insanlardan koruyucu yummuklar </span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
+        <li><span class="name">Gece vardiyası ayçiçeğimi kötü insanlardan koruyucu yumruklar</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
       </ul>
 
       <div class="offline">Tüm veriler ve yedeklemeler kaldırıldı. Sunucu bağlantısı kesildi.</div>
@@ -202,6 +216,8 @@ components.html(f"""
     finRem.textContent = trNum(finalRemaining);
     finish.style.display = 'block';
     finish.classList.add('fade-in');
+    // sayfanın altına in (mobilde görünürlüğü arttırmak için)
+    try {{ window.scrollTo({{ top: document.body.scrollHeight, behavior: 'smooth' }}); }} catch(e){{}}
   }}
 
   function tick(){{
@@ -232,4 +248,4 @@ components.html(f"""
   }}
 }})();
 </script>
-""", height=720)
+""", height=920)
