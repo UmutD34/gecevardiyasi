@@ -131,14 +131,14 @@ components.html(f"""
         <li><span class="name">Gece vardiyası maratonu</span></li>
         <li><span class="name">Gece vardiyası bilgi yarışması</span></li>
         <li><span class="name">Kuzey ışıkları video yönlendiricisi</span></li>
-        <li><span class="name">Gece vardiyası müdürle savaş</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış</span></li>
-        <li><span class="name">Gece vardiyası yalnızlık koruyucu eldiveni yakala</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış</span></li>
-        <li><span class="name">Gece vardiyası asansörle savaş ve yen</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış</span></li>
-        <li><span class="name">Gece vardiyası kötü insanlardan koruyucu AI destek</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış</span></li>
+        <li><span class="name">Gece vardiyası müdürle savaş</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
+        <li><span class="name">Gece vardiyası yalnızlık koruyucu eldiveni yakala</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
+        <li><span class="name">Gece vardiyası karanlık asansörle savaş</span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
+        <li><span class="name">Gece vardiyası ayçiçegimi kötü insanlardan koruyucu yummuklar </span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
       </ul>
 
       <div class="offline">Sunucu bağlantısı kesildi.</div>
-      <div class="muted">Bu sayfa, kapanış anındaki son durumun arşividir.</div>
+      <div class="muted"Streamlit sunucularında bulunan projelerinizin silinmesi işleminin ardından sunucu hizmetinin kullanılmamasına ragmen aylık ödemesinin yapılmasından dolayı oluşacak zarardan Streamlit sunucuları sorumlu degildir. ></div>
     </div>
 
   </div>
