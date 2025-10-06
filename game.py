@@ -216,8 +216,13 @@ components.html(f"""
     finRem.textContent = trNum(finalRemaining);
     finish.style.display = 'block';
     finish.classList.add('fade-in');
-    // sayfanın altına in (mobilde görünürlüğü arttırmak için)
-    try {{ window.scrollTo({{ top: document.body.scrollHeight, behavior: 'smooth' }}); }} catch(e){{}}
+
+    // Mobilde başlığın görünmesi için SAYFAYI EN ÜSTE KAYDIR
+    try {{
+      window.scrollTo({{ top: 0, behavior: 'smooth' }});
+      // bazı mobil tarayıcılarda güvence için küçük bir gecikmeyle tekrar
+      setTimeout(function(){{ window.scrollTo(0,0); }}, 200);
+    }} catch(e){{ try {{ window.scrollTo(0,0); }} catch(e2){{}} }}
   }}
 
   function tick(){{
@@ -248,4 +253,4 @@ components.html(f"""
   }}
 }})();
 </script>
-""", height=920)
+""", height=1000)
