@@ -253,4 +253,4 @@ components.html(f"""
   }}
 }})();
 </script>
-""", height=1000)
+""", height=1200)
