@@ -126,7 +126,7 @@ components.html(f"""
         <div>Kalan — <span id="fin_remaining">-</span></div>
       </div>
 
-      <div style="font-weight:800; margin-top:12px;">Silinen oyun ve uygulamalar:</div>
+      <div style="font-weight:800; margin-top:12px;">Veritabanından silinen oyun ve uygulamalar:</div>
       <ul>
         <li><span class="name">Gece vardiyası maratonu</span></li>
         <li><span class="name">Gece vardiyası bilgi yarışması</span></li>
