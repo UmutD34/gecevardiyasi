@@ -138,7 +138,7 @@ components.html(f"""
       </ul>
 
       <div class="offline">Sunucu bağlantısı kesildi.</div>
-      <div class="muted">Streamlit sunucularında barındırılan projelerin silinmesinin ardından, sunucu hizmetinin kullanılmamasına rağmen gerçekleştirilen aylık ödemelerden doğabilecek maddi zararlardan Streamlit sunucuları sorumlu tutulamaz. Projelerin kaldırılması halinde yer sağlayıcılık hizmetinin iptali veya durdurulması kullanıcının sorumluluğundadır.</div>
+      <div class="muted">Streamlit sunucularında barındırılan projelerin silinmesinin ardından, sunucu hizmetinin kullanılmamasına rağmen gerçekleştirilen aylık ödemelerden doğabilecek maddi zararlardan Streamlit sunucuları sorumlu tutulamaz. Projelerin kaldırılması halinde yer sağlayıcılık hizmetinin iptali veya durdurulması geliştiricinin sorumluluğundadır.</div>
     </div>
 
   </div>
