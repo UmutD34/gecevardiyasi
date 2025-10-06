@@ -137,7 +137,7 @@ components.html(f"""
         <li><span class="name">Gece vardiyası ayçiçegimi kötü insanlardan koruyucu yummuklar </span><span class="badge">Aktifleştirilmemiş • tamamlanamamış proje</span></li>
       </ul>
 
-      <div class="offline">Sunucu bağlantısı kesildi.</div>
+      <div class="offline">Tüm veriler ve yedeklemeler kaldırıldı. Sunucu bağlantısı kesildi.</div>
       <div class="muted">Streamlit sunucularında barındırılan projelerin silinmesinin ardından, sunucu hizmetinin kullanılmamasına rağmen gerçekleştirilen aylık ödemelerden doğabilecek maddi zararlardan Streamlit sunucuları sorumlu tutulamaz. Projelerin kaldırılması halinde yer sağlayıcılık hizmetinin iptali veya durdurulması geliştiricinin sorumluluğundadır.</div>
     </div>
 
