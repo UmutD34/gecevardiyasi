@@ -178,7 +178,7 @@ html_code = """
             </div>
             
             <div class="paragraph">
-                O gün geldiğinde burada bir huzur bulabilmen için, seninle tanışmamızın yıl dönümü olan 24 Kasım'a bir hafta kala bu mektubu buraya bırakıyorum. Ben artık olmasam da sana iyi gelecektir.
+                O gün geldiğinde burada bir huzur bulabilmen için, seninle tanışmamızın yıl dönümü olan 24 Kasım'a bir hafta kala bu mektubu buraya bırakıyorum. Sana iyi gelecektir.
             </div>
             
             <div class="paragraph">
