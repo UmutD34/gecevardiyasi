@@ -223,7 +223,7 @@ html_code = """
             </div>
 
             <div class="paragraph">
-                Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Hayatta bugunlere kadar hiç olmasa bile ve hiç olamayacak olsa bile seni anlayan ve çok seven birisi oldu. Bu sana güç ve saglık versin. Şuan yaşadıgın her ne zorluksa bu güç ve kuvvet ile atlatacagına eminim Yapabilirsin.
+                Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Hayatta seni anlayan ve sadece varlıgına baglı bir degerle çok seven birisi oldu. Bu sana güç ve saglık versin. Şuan yaşadıgın her ne zorluksa bu güç ve kuvvet ile atlatacagına eminim. Hoşcakal.
             </div>
         </div>
         
