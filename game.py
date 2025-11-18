@@ -23,6 +23,9 @@ st.markdown("""
         box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         font-family: Georgia, serif;
         border-top: 8px solid #667eea;
+        overflow: hidden;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .date-style {
@@ -45,10 +48,14 @@ st.markdown("""
         line-height: 1.8;
         font-size: 16px;
         text-align: justify;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
     
     .content-style p {
         margin-bottom: 20px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
     
     div[data-testid="stButton"] > button {
