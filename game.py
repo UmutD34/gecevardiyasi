@@ -1,63 +1,54 @@
-import os
-
-html_icerigi = """
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sevgili Dilay'a Mektup</title>
+    <title>Dilay'a Mektup</title>
     <style>
-        /* Mobil Dostu ve Duygusal Tasarım */
+        /* Mobil Uyumlu ve Güvenilir Stil */
         body {
-            font-family: 'Georgia', serif;
-            background-color: #1c1c1c; /* Koyu arka plan */
-            color: #dcdcdc; /* Açık metin */
-            padding: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0; /* Açık Gri Arka Plan */
+            color: #333; /* Koyu Metin */
+            padding: 15px;
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
         }
 
         .mektup-container {
-            width: 95%;
-            max-width: 600px; /* Mobil ve tablet için uygun maksimum genişlik */
-            margin-top: 20px;
+            width: 100%;
+            max-width: 500px; /* Mobil Ekran için maksimum genişlik */
             padding: 20px;
-            background-color: #2a2a2a;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Kaydırma Efekti (Akan Yazı) */
+        /* Kaydırılabilir Metin Alanı (Akan Yazı) */
         .mektup-icerik {
-            height: 65vh; /* Mobil ekranın %65'i kadar yükseklik */
-            overflow-y: scroll; /* Dikey kaydırmayı etkinleştirir */
+            height: 70vh; /* Ekran yüksekliğinin %70'ini kapla */
+            overflow-y: scroll; /* Dikey kaydırmayı etkinleştir */
             line-height: 1.6;
-            white-space: pre-wrap; /* Satır sonlarını korur ve metni sarar */
             font-size: 16px;
             margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #444;
-            border-radius: 4px;
+            padding-right: 10px; /* Kaydırma çubuğu için boşluk */
+            white-space: pre-wrap; /* Satır sonlarını koru */
         }
 
         .tarih {
             font-style: italic;
             text-align: right;
             display: block;
-            margin-bottom: 15px;
-            color: #bbb;
+            margin-bottom: 10px;
         }
 
         .selamlama {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.1em;
             margin-bottom: 15px;
             display: block;
-            color: #e5e5e5;
         }
 
         .imza {
@@ -71,19 +62,19 @@ html_icerigi = """
         #playButton {
             width: 100%;
             padding: 15px;
-            background-color: #c0392b; /* Kırmızımsı kontrast renk */
+            background-color: #e74c3c; /* Kırmızı Buton */
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 18px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            margin-top: 15px;
             font-weight: bold;
-            text-transform: uppercase;
+            transition: background-color 0.2s;
         }
 
         #playButton:hover {
-            background-color: #e74c3c;
+            background-color: #c0392b;
         }
     </style>
 </head>
@@ -130,7 +121,7 @@ html_icerigi = """
         
         Bana yaşattığın güzel anlar için teşekkür ederim. Bende güzel bir yerin olacak. Umarım sen de kendi yolunda huzuru bulursun. Zor zamanlarında şarkılarını dinle; sana güç ve huzur vereceklerdir.
         
-        <span class="imza">Sevgilerle.</span>
+        <div class="imza">Sevgilerle.</div>
     </div>
     
     <button id="playButton" onclick="openMusic()">Hatırla beni...</button>
@@ -140,20 +131,10 @@ html_icerigi = """
 <script>
     function openMusic() {
         var musicUrl = "https://www.youtube.com/watch?v=9bcO0yIUNkQ&list=RD9bcO0yIUNkQ&start_radio=1";
+        // Müzik linkini yeni sekmede açar
         window.open(musicUrl, '_blank');
     }
 </script>
 
 </body>
 </html>
-"""
-
-# HTML dosyasını oluştur ve kaydet
-dosya_adi = "Dilaya_Mektup.html"
-try:
-    with open(dosya_adi, "w", encoding="utf-8") as f:
-        f.write(html_icerigi)
-    print(f"Mektup başarıyla oluşturuldu: {os.path.abspath(dosya_adi)}")
-    print("Bu dosyayı herhangi bir tarayıcıda (mobil dahil) açarak mektubu görebilirsiniz.")
-except Exception as e:
-    print(f"Dosya yazılırken bir hata oluştu: {e}")
