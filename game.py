@@ -191,11 +191,11 @@ html_code = """
             </div>
             
             <div class="paragraph">
-                Bizim ilişkimizi geriye sardığımda, bugün bazı şeyleri daha net görüyorum: Sen duygularını güçlü yaşayan biriydin, sevgiyi derinden hissediyordun ama aynı zamanda o sevginin sana ağır geldiği anlar da vardı. Bu, senin kötü ya da yetersiz olmandan değildi; kendi içindeki yükler, geçmişte taşıdığın kırgınlıklar ve zaman zaman kimse tarafından tam anlaşılamama korkusu seni yoruyordu.
+                Bizim ilişkimizi geriye sardığımda, bugün bazı şeyleri daha net görüyorum: Sen duygularını güçlü yaşayan biriydin, sevgiyi derinden hissediyordun ama aynı zamanda o sevginin sana ağır geldiği anlar da vardı. Bu, senin kötü ya da yetersiz olmandan değildi; kendi içindeki yükler, geçmişte taşıdığın kırgınlıklar ve zaman zaman kimse tarafından tam anlaşılamama korkusu seni yoruyordu ve belkide sevgiyi ilk gördügün yer olan ailende yaşadıkların sevgiye karşı korkutuyordu seni.
             </div>
             
             <div class="paragraph">
-                Benim sevgim çoğu zaman sana iyi geliyordu fakat bazı anlarda seni korkuttu. Çünkü karşılık vermek zorundaymışsın gibi hissettin. Sanki bir adım geri çekildiğinde sevgi azalacakmış gibi kaygı duydun. Bu yüzden kaçtığın anlar oldu. Bu bir tercih değildi; içgüdüsel bir savunmaydı.
+                Benim sevgim çoğu zaman sana iyi geliyordu fakat bazı anlarda seni korkuttu. Çünkü karşılık vermek zorundaymışsın gibi hissettin. Sanki bir adım geri çekildiğinde sevgi azalacakmış gibi kaygı duydun. Bu yüzden kaçtığın anlar oldu anlıyorum bu içgüdüsel bir savunmaydı.
             </div>
             
             <div class="paragraph">
@@ -207,15 +207,15 @@ html_code = """
             </div>
             
             <div class="paragraph">
-                Bunu artık kendime yük etmiyorum. Sevmek benim suçum değildi. Niyetim temizdi. Sana kızgın değilim, kırgın da değilim. Hatta bugün, beni değil kendini korumaya çalıştığını hissedebiliyorum. Bu ilişki senin için sadece bir 'sevgi' meselesi değildi; kendiyle olan mücadeleni de içine katıyordu. Bu yüzden ağırlık hissettin, bu yüzden yoruldun. Bunu anlıyorum.
+                Bunu artık kendime yük etmiyorum. Sevmek benim suçum değildi. Niyetim temizdi. Sana kızgın değilim, kırgın da değilim. Hatta bugün, kendini korumaya çalıştığını hissedebiliyorum elinden geleni dogru oldugunu düşündügün şeyi yapıyorsun. Bu ilişki senin için sadece bir 'sevgi' meselesi değildi; kendiyle olan mücadeleni de içine katıyordu. Bu yüzden ağırlık hissettin, bu yüzden yoruldun. Bunu anlıyorum.
             </div>
             
             <div class="paragraph">
-                Bu mesajı yazmamın sebebi seni geri döndürmek değil. Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Çünkü bu hikâyede sen kötü biri değildin, ben de değilim. Sadece farklı yaralarla sevmeye çalışan iki insandık. Sen elinden geleni yaptın, ben de yaptım. Bazen iki iyi niyet, bir ilişkiyi ayakta tutmaya yetmiyor.
+                Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Çünkü bu hikâyede sen kötü biri değildin, ben de değilim. Ben sevdim karşılık bekledim sen sevdin elinden geleni yapmanın yetmeyeceginden korktun ve bunaldın Sadece farklı yaralarla sevmeye çalışan iki insandık. Sen elinden geleni yaptın, ben de yaptım. Bazen iki iyi niyet, bir ilişkiyi ayakta tutmaya yetmiyor.
             </div>
             
             <div class="paragraph">
-                Sana teşekkür ederim. Paylaştığımız her iyi an için, büyüdüğüm her duygu için, kalbime bıraktığın her iz için. Bunlar bende güzel bir yer olarak kalacak. Senin de kendi yolunda huzuru bulmanı dilerim. Sadece seni anladığımı bil istedim.
+                Sana teşekkür ederim. Paylaştığımız her iyi an için, büyüdüğüm her duygu için, kalbime bıraktığın her iz için. Bunlar bende güzel bir yer olarak kalacak. Senin de kendi yolunda huzuru bulmanı dilerim. Sadece seni anladığımı bil istedim. Hoşcakal mektubumu böyle vermek istedim sana özel sitende.
             </div>
             
             <div class="paragraph">
