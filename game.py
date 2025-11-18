@@ -221,10 +221,14 @@ html_code = """
             <div class="paragraph">
                 Bana yaşattığın güzel anlar için teşekkür ederim. Bende güzel bir yerin olacak. Umarım sen de kendi yolunda huzuru bulursun. Zor zamanlarında şarkılarını dinle; sana güç ve huzur vereceklerdir.
             </div>
+
+            <div class="paragraph">
+                Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Hayatta bugunlere kadar hiç olmasa bile ve hiç olamayacak olsa bile seni anlayan ve çok seven birisi oldu. Bu sana güç ve saglık versin. Şuan yaşadıgın her ne zorluksa bu güç ve kuvvet ile atlatacagına eminim Yapabilirsin.
+            </div>
         </div>
         
         <div class="button-container">
-            <button class="music-button" onclick="playMusic()">Hatırla Beni ♪</button>
+            <button class="music-button" onclick="playMusic()">Hatıra</button>
         </div>
     </div>
 
