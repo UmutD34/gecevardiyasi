@@ -226,6 +226,11 @@ html_code = """
                 Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Hayatta seni anlayan ve sadece varlıgına baglı bir degerle çok seven birisi oldu. Bu sana güç ve saglık versin. Şuan yaşadıgın her ne zorluksa bu güç ve kuvvet ile atlatacagına eminim. Hoşcakal.
             </div>
         </div>
+
+        <div class="paragraph">
+                22 Ocak 2026'da sana son bir kez daha el uzatmıştım. Elveda...
+            </div>
+        </div>
         
         <div class="button-container">
             <button class="music-button" onclick="playMusic()">Hatıra</button>
