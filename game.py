@@ -178,11 +178,11 @@ html_code = """
             </div>
             
             <div class="paragraph">
-                O gün geldiğinde burada bir huzur bulabilmen için, seninle tanışmamızın yıl dönümü olan 24 Kasım'a bir hafta kala bu mektubu buraya bırakıyorum. Sana iyi gelecektir.
+                O gün geldiğinde burada bir huzur bulabilmen için sana son veda mesajımı attıktan sonra 26 Ocak 2026 Tarihinde bırakıyorum. Endiselenme bu app sadece sana ve bana özel ve gizlidir.
             </div>
             
             <div class="paragraph">
-                Senden bir karşılık görmek için değil, sana olan sevgimin bir gerekliliği olarak iyi olmanı istediğim için bu mektubu bırakıyorum. Ne zaman güçsüz hissedersen burada sana iyi gelecek bir mektubun olsun istedim.
+                Geri gelmen için degil çünkü kalbin yola çıktı bir kere artık istemem gelmeni, bu sana olan sevgimin içimden bir gerekliliği olarak iyi olmanı istediğim için bu mektubu bırakıyorum. Ne zaman güçsüz hissedersen burada sana iyi gelecek bir mektubun olsun istedim.
             </div>
             
             <div class="paragraph">
@@ -224,11 +224,6 @@ html_code = """
 
             <div class="paragraph">
                 Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Hayatta seni anlayan ve sadece varlıgına baglı bir degerle çok seven birisi oldu. Bu sana güç ve saglık versin. Şuan yaşadıgın her ne zorluksa bu güç ve kuvvet ile atlatacagına eminim. Hoşcakal.
-            </div>
-        </div>
-
-        <div class="paragraph">
-                22 Ocak 2026'da sana son bir kez daha el uzatmıştım. Elveda...
             </div>
         </div>
         
