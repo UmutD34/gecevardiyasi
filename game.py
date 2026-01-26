@@ -172,15 +172,11 @@ html_code = """
         <div class="date">17.11.2025</div>
         <div class="salutation">Sevgili Dilay,</div>
         
-       
-            
+        <div class="content">
             <div class="paragraph">
-                <strong>Bir gün bu siteye girersen...</strong><br>
-                Aşkımızı hatırla.
+                Bir gün bu siteye girersen, belki aradan aylar veya yıllar geçmiş olacaktır. Ancak girersen, aşkımızı hatırla...
             </div>
             
-            
-        </div>
         
         <div class="button-container">
             <button class="music-button" onclick="playMusic()">Hatıra</button>
