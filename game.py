@@ -175,8 +175,8 @@ html_code = """
        
             
             <div class="paragraph">
-                <strong>Bugün</strong><br>
-                İnan bana, seni suçlamak, bir şeyleri zorlamak ya da seni kararından döndürmeye çalışmak için yazmıyorum. Sadece içimde biriken bir farkındalığı paylaşmak istiyorum.
+                <strong>Bir gün bu siteye girersen...</strong><br>
+                Aşkımızı hatırla.
             </div>
             
             
