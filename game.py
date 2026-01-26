@@ -172,59 +172,14 @@ html_code = """
         <div class="date">17.11.2025</div>
         <div class="salutation">Sevgili Dilay,</div>
         
-        <div class="content">
-            <div class="paragraph">
-                Bir gün kapattığım bu siteye gireceksin. Buraya girdiğinde, bazı acılarla girmiş olduğunu biliyorum. Bu acılar; hayattan, sağlıktan, aileden ya da geçmiş ilişkimizden kaynaklanıyor olabilir. Ne olursa olsun...
-            </div>
-            
-            <div class="paragraph">
-                O gün geldiğinde burada bir huzur bulabilmen için sana son veda mesajımı attıktan sonra 26 Ocak 2026 Tarihinde bırakıyorum. Endiselenme bu app sadece sana ve bana özel ve gizlidir.
-            </div>
-            
-            <div class="paragraph">
-                Geri gelmen için degil çünkü kalbin yola çıktı bir kere artık istemem gelmeni, bu sana olan sevgimin içimden bir gerekliliği olarak iyi olmanı istediğim için bu mektubu bırakıyorum. Ne zaman güçsüz hissedersen burada sana iyi gelecek bir mektubun olsun istedim.
-            </div>
+       
             
             <div class="paragraph">
                 <strong>Bugün</strong><br>
                 İnan bana, seni suçlamak, bir şeyleri zorlamak ya da seni kararından döndürmeye çalışmak için yazmıyorum. Sadece içimde biriken bir farkındalığı paylaşmak istiyorum.
             </div>
             
-            <div class="paragraph">
-                Bizim ilişkimizi geriye sardığımda, bugün bazı şeyleri daha net görüyorum: Sen duygularını güçlü yaşayan biriydin, sevgiyi derinden hissediyordun ama aynı zamanda o sevginin sana ağır geldiği anlar da vardı. Bu, senin kötü ya da yetersiz olmandan değildi; kendi içindeki yükler, geçmişte taşıdığın kırgınlıklar ve zaman zaman kimse tarafından tam anlaşılamama korkusu seni yoruyordu ve belkide sevgiyi ilk gördügün yer olan ailende yaşadıkların sevgiye karşı korkutuyordu seni.
-            </div>
             
-            <div class="paragraph">
-                Benim sevgim çoğu zaman sana iyi geliyordu fakat bazı anlarda seni korkuttu. Çünkü karşılık vermek zorundaymışsın gibi hissettin. Sanki bir adım geri çekildiğinde sevgi azalacakmış gibi kaygı duydun. Bu yüzden kaçtığın anlar oldu anlıyorum bu içgüdüsel bir savunmaydı.
-            </div>
-            
-            <div class="paragraph">
-                Ben sevgimi verirken iyi etmek, güçlendirmek istedim. Ama belki de bazı anlarda fazlası oldu. Ben de o dönem bazı şeyleri yanlış yorumladım. Seni daha çok sarınca iyileşirsin sandım, oysa bazen senin nefes almaya ihtiyacın vardı. Bunları şimdi fark edebiliyorum.
-            </div>
-            
-            <div class="paragraph">
-                O günlerde ikimiz de kendi eksiklerimizle savaşıyorduk. Niyetim hep güzeldi ama herkesin kaldırabileceği yük farklıdır. Ben seni gerçekten bir insan olarak sevdim. Eksiklerinle, güçlü yanlarınla, bazen içine kapanmanla... Ve bugün şunu da görüyorum: Ben de iyi bir insanım. Severken elimden geleni yaptım, karşılık beklemeden emek verdim. Hiçbir anında seni yormak için değil, yanında olmak için çabaladım.
-            </div>
-            
-            <div class="paragraph">
-                Bunu artık kendime yük etmiyorum. Sevmek benim suçum değildi. Niyetim temizdi. Sana kızgın değilim, kırgın da değilim. Hatta bugün, kendini korumaya çalıştığını hissedebiliyorum elinden geleni dogru oldugunu düşündügün şeyi yapıyorsun. Bu ilişki senin için sadece bir 'sevgi' meselesi değildi; kendiyle olan mücadeleni de içine katıyordu. Bu yüzden ağırlık hissettin, bu yüzden yoruldun. Bunu anlıyorum.
-            </div>
-            
-            <div class="paragraph">
-                Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Çünkü bu hikâyede sen kötü biri değildin, ben de değilim. Ben sevdim karşılık bekledim sen sevdin elinden geleni yapmanın yetmeyeceginden korktun ve bunaldın Sadece farklı yaralarla sevmeye çalışan iki insandık. Sen elinden geleni yaptın, ben de yaptım. Bazen iki iyi niyet, bir ilişkiyi ayakta tutmaya yetmiyor.
-            </div>
-            
-            <div class="paragraph">
-                Sana teşekkür ederim. Paylaştığımız her iyi an için, büyüdüğüm her duygu için, kalbime bıraktığın her iz için. Bunlar bende güzel bir yer olarak kalacak. Senin de kendi yolunda huzuru bulmanı dilerim. Sadece seni anladığımı bil istedim. Hoşcakal mektubumu böyle vermek istedim sana özel sitende.
-            </div>
-            
-            <div class="paragraph">
-                Bana yaşattığın güzel anlar için teşekkür ederim. Bende güzel bir yerin olacak. Umarım sen de kendi yolunda huzuru bulursun. Zor zamanlarında şarkılarını dinle; sana güç ve huzur vereceklerdir.
-            </div>
-
-            <div class="paragraph">
-                Bir gün geçmişe dönüp kendini suçlamanı istemiyorum. Hayatta seni anlayan ve sadece varlıgına baglı bir degerle çok seven birisi oldu. Bu sana güç ve saglık versin. Şuan yaşadıgın her ne zorluksa bu güç ve kuvvet ile atlatacagına eminim. Hoşcakal.
-            </div>
         </div>
         
         <div class="button-container">
